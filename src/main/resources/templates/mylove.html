@@ -320,6 +320,7 @@
         </div>
     </section>
 
+
     <footer>
         من ألمانيا للجزائر: نحبك 🎂💜
     </footer>
@@ -446,6 +447,35 @@
     });
 </script>
 
+<!-- Mini-ETA-Badge (wird automatisch versteckt, wenn <= 60s) -->
+<div id="bd-eta-pill" aria-live="polite" title="كم تبقّى لبدء العرض؟">
+  <span class="bd-eta-label">باقي:</span>
+  <span id="bdEtaText">—</span>
+  </div>
+
+<style>
+  #bd-eta-pill{
+    position: fixed;
+    top: 14px;
+    right: 14px;
+    z-index: 70;
+    background: rgba(15,23,42,0.55);
+    border: 1px solid rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-size: .9rem;
+    box-shadow: 0 8px 20px rgba(0,0,0,.25);
+  }
+  #bd-eta-pill.hidden{ display:none; }
+  #bd-eta-pill .bd-eta-label{
+    background: linear-gradient(90deg,#ff5f96,#c084fc);
+    -webkit-background-clip: text; color: transparent;
+    font-weight: 700; margin-inline-end: 6px;
+  }
+</style>
+
 <!-- Birthday overlay + fireworks (HTML container) -->
 <div id="birthday-overlay" style="display:none;">
     <div class="bd-content">
@@ -460,6 +490,47 @@
 
 <!-- Optional: real song file (place file at static/audio/happy-birthday.mp3) -->
 <audio id="bd-audio-file" src="/audio/happy-birthday.mp3" preload="auto" loop style="display:none"></audio>
+
+<!-- Mini-Badge Logik: zeigt verbleibende Zeit bis zur letzten Minute -->
+<script>
+// ==== Mini-Badge bis zur letzten Minute, dann ausblenden (Overlay übernimmt) ====
+(function(){
+  const meta = (name) => { const m = document.querySelector(`meta[name="${name}"]`); return (m && m.content) ? m.content.trim() : ""; };
+  const BIRTHDAY_STR = meta('mylove-birthday') || '1996-11-16';
+  const parts = BIRTHDAY_STR.split('-');
+  if (parts.length !== 3) return;
+  const BY = parseInt(parts[0],10), BM = parseInt(parts[1],10), BD = parseInt(parts[2],10);
+  if (!BY || !BM || !BD) return;
+
+  const pill = document.getElementById('bd-eta-pill');
+  const txt  = document.getElementById('bdEtaText');
+  if (!pill || !txt) return;
+
+  const birthdayOfYear = (year) => { const d = new Date(year, BM - 1, BD); d.setHours(0,0,0,0); return d; };
+  const nextBirthdayMidnight = (now) => { const thisYear = birthdayOfYear(now.getFullYear()); return (thisYear > now) ? thisYear : birthdayOfYear(now.getFullYear() + 1); };
+
+  function fmtRemaining(sec){
+    const d = Math.floor(sec / 86400); sec %= 86400;
+    const h = Math.floor(sec / 3600); sec %= 3600;
+    const m = Math.floor(sec / 60);
+    if (d > 0) return `${d.toLocaleString('ar')} يوم ${h.toLocaleString('ar')} ساعة`;
+    if (h > 0) return `${h.toLocaleString('ar')} ساعة ${m.toLocaleString('ar')} دقيقة`;
+    return `${m.toLocaleString('ar')} دقيقة`;
+  }
+
+  function tick(){
+    const now = new Date();
+    const target = nextBirthdayMidnight(now);
+    let diff = Math.floor((target - now) / 1000);
+    if (diff <= 60) { pill.classList.add('hidden'); }
+    else { pill.classList.remove('hidden'); txt.textContent = fmtRemaining(diff); pill.setAttribute('aria-label', `باقي ${txt.textContent} لبدء العرض`); }
+  }
+
+  tick();
+  const id = setInterval(tick, 15000);
+  document.addEventListener('visibilitychange', () => { if (document.hidden) { try { clearInterval(id); } catch {} } });
+})();
+</script>
 
 <!-- Feature script -->
 <script src="/js/birthday.js"></script>
