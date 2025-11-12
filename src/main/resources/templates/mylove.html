@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8" />
   <title>عيد ميلادك يا قلبي 🎂💜</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Birthday config (name, birthday YYYY-MM-DD) -->
+  <meta name="mylove-name" th:content="${@environment.getProperty('mylove.name','Mein Schatz')}" />
+  <meta name="mylove-birthday" th:content="${@environment.getProperty('mylove.birthday','1996-11-16')}" />
   <style>
     :root {
       --pink: #ff5f96;
@@ -515,5 +518,19 @@
       setTimeout(() => word.remove(), 2200);
     });
   </script>
+  <!-- Birthday overlay + fireworks (HTML container) -->
+  <div id="birthday-overlay" style="display:none;">
+    <div class="bd-content">
+      <div class="bd-count">60</div>
+      <div class="bd-msg"></div>
+    </div>
+    <canvas id="fireworks-canvas"></canvas>
+  </div>
+
+  <!-- Test button to trigger the countdown -->
+  <button id="test-birthday-btn" title="Test Geburtstag">Test 🎆</button>
+
+  <!-- Feature script -->
+  <script src="/js/birthday.js"></script>
 </body>
 </html>
