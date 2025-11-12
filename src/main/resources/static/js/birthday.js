@@ -193,15 +193,19 @@
       if (remaining <= 0) {
         clearInterval(timer);
         countEl.style.display = 'none';
-        msgEl.innerHTML = `ðŸŽ‚ Frohen Geburtstag, ${LOVE_NAME}!<span class="bd-age">Wird ${finishingAge} Jahre alt ðŸ’–</span>`;
+        msgEl.innerHTML = `ðŸŽ‚ ARABIC_BDAY, ${LOVE_NAME}!<span class="bd-age">Wird ${finishingAge} Jahre alt ðŸ’–</span>`;
+        // رسالة التهنئة النهائية
+        msgEl.innerHTML = `🎂 عيد ميلاد سعيد، ${LOVE_NAME}!<span class=\"bd-age\">ستصبح بعمر ${finishingAge} سنة 💖</span>`;
         try { window.bdKeepRunning = true; } catch {}
         startFireworks();
         try { startConfettiStream(); } catch {}
         try { ensureCloseButton(); } catch {}
         try { playBirthdayAudioPreferred(); } catch {}
         try { ensureAudioButton(); } catch {}
+        msgEl.innerHTML = `🎂 عيد ميلاد سعيد، ${LOVE_NAME}!<span class=\"bd-age\">ستصبح بعمر ${finishingAge} سنة 💖</span>`;
         return;
       }
+      try { playCountdownTick(remaining); } catch {}
       countEl.textContent = format(remaining);
     };
     const timer = setInterval(tick, 1000);
@@ -238,9 +242,10 @@
       overlay.style.display = 'flex';
       overlay.setAttribute('aria-hidden', 'false');
       countEl.style.display = 'none';
-      msgEl.innerHTML = `ðŸŽ‚ Frohen Geburtstag, ${LOVE_NAME}!<span class="bd-age">Wurde ${ageOn(now.getFullYear())} Jahre alt ðŸ’–</span>`;
+      msgEl.innerHTML = `ðŸŽ‚ ARABIC_BDAY, ${LOVE_NAME}!<span class="bd-age">Wurde ${ageOn(now.getFullYear())} Jahre alt ðŸ’–</span>`;
       startFireworks();
       try { startConfettiStream(); } catch {}
+      msgEl.innerHTML = `🎂 عيد ميلاد سعيد، ${LOVE_NAME}!<span class=\"bd-age\">أصبحت الآن بعمر ${ageOn(now.getFullYear())} سنة 💖</span>`;
       try { playBirthdayAudioPreferred(); } catch {}
       try { ensureCloseButton(); } catch {}
       try { ensureAudioButton(); } catch {}
@@ -326,7 +331,7 @@ function ensureCloseButton() {
     btn = document.createElement('button');
     btn.id = 'bd-close';
     btn.type = 'button';
-    btn.textContent = 'Zurück';
+    btn.textContent = 'إغلاق';
     overlay.appendChild(btn);
   }
   btn.onclick = stopAllEffects;
@@ -337,6 +342,7 @@ function stopAllEffects() {
   stopConfettiStream();
   stopHeartTrail();
   try { stopBirthdaySong(); } catch {}
+  try { stopBirthdayTrack(); } catch {}
   try { window.bdStopBalloons && window.bdStopBalloons(); } catch {}
   try { window.bdStopTwinkles && window.bdStopTwinkles(); } catch {}
   try { document.getElementById('birthday-overlay').style.display = 'none'; } catch {}
@@ -398,6 +404,28 @@ function stopBirthdaySong() {
   try { bdAudio.timers.forEach(id => clearTimeout(id)); } catch {}
   bdAudio.timers = [];
   // do not close context; just leave it for reuse
+}
+
+// Short tick/chime for countdown seconds
+function playCountdownTick(remaining) {
+  const ctx = ensureAudioCtx();
+  if (!ctx) return;
+  // be polite: if user hasn’t interacted and autoplay is blocked, this may be silent until unblocked
+  const now = ctx.currentTime + 0.01;
+  const osc = ctx.createOscillator();
+  const g = ctx.createGain();
+  const isFinal5 = remaining <= 5;
+  const freq = isFinal5 ? 1100 : 700;
+  const dur = isFinal5 ? 0.12 : 0.06;
+  const vol = isFinal5 ? 0.20 : 0.12;
+  osc.type = isFinal5 ? 'square' : 'sine';
+  osc.frequency.setValueAtTime(freq, now);
+  osc.connect(g); g.connect(bdAudio.master);
+  g.gain.setValueAtTime(0.0001, now);
+  g.gain.linearRampToValueAtTime(vol, now + 0.01);
+  g.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+  osc.start(now);
+  osc.stop(now + dur + 0.02);
 }
 
 function ensureAudioFile() {
@@ -504,7 +532,7 @@ function ensureAudioButton() {
     btn = document.createElement('button');
     btn.id = 'bd-audio';
     btn.type = 'button';
-    btn.textContent = '🔊 Musik';
+    btn.textContent = '🔊 موسيقى';
     overlay.appendChild(btn);
   }
   const refresh = () => {
@@ -609,4 +637,6 @@ function startTwinkles(n=60) {
   try { window.bdStopTwinkles = stopper; } catch {}
   return stopper;
 }
+
+
 

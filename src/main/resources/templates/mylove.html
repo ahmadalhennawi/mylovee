@@ -122,124 +122,33 @@
       background: linear-gradient(180deg, rgba(255,95,150,0), rgba(255,95,150,1), rgba(192,132,252,0));
       filter: drop-shadow(0 0 10px rgba(255,95,150,.4));
     }
-    .timeline-item {
-      position: relative;
-      margin-bottom: 30px;
-      opacity: 0;
-      transform: translateY(15px);
-    }
-    .timeline-item.show {
-      opacity: 1;
-      transform: translateY(0);
-      transition: .6s ease;
-    }
-    .bullet {
-      position: absolute;
-      top: 12px;
-      right: 50%;
-      transform: translate(50%,0);
-      width: 20px;
-      height: 20px;
-      background: radial-gradient(circle, #fff 0%, #ff5f96 60%);
-      border: 3px solid rgba(255,255,255,.3);
-      border-radius: 50%;
-      box-shadow: 0 0 15px rgba(255,95,150,0.8);
-    }
-    .timeline-card {
-      background: rgba(15, 23, 42, 0.35);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,.08);
-      border-radius: 20px;
-      padding: 18px 20px 12px;
-      width: min(80%, 560px);
-      margin: 0 auto;
-      box-shadow: 0 10px 30px rgba(0,0,0,.25);
-    }
-    .timeline-date {
-      display: inline-block;
-      background: linear-gradient(90deg, #ff5f96, #c084fc);
-      color: #fff;
-      padding: 5px 14px;
-      border-radius: 999px;
-      font-size: .75rem;
-      margin-bottom: 8px;
-    }
+    .timeline-item { position: relative; margin-bottom: 30px; opacity: 0; transform: translateY(15px); }
+    .timeline-item.show { opacity: 1; transform: translateY(0); transition: .6s ease; }
+    .bullet { position: absolute; top: 12px; right: 50%; transform: translate(50%,0); width: 20px; height: 20px; background: radial-gradient(circle, #fff 0%, #ff5f96 60%); border: 3px solid rgba(255,255,255,.3); border-radius: 50%; box-shadow: 0 0 15px rgba(255,95,150,0.8); }
+    .timeline-card { background: rgba(15, 23, 42, 0.35); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,.08); border-radius: 20px; padding: 18px 20px 12px; width: min(80%, 560px); margin: 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,.25); }
+    .timeline-date { display: inline-block; background: linear-gradient(90deg, #ff5f96, #c084fc); color: #fff; padding: 5px 14px; border-radius: 999px; font-size: .75rem; margin-bottom: 8px; }
     .timeline-text p { margin: 4px 0 6px; }
 
     /* unterer Bereich */
-    #since {
-      position: relative;
-      z-index: 6;
-      text-align: center;
-      margin: 60px 0 50px;
-      direction: ltr;
-    }
-    #since h2 {
-      background: linear-gradient(90deg,#ff5f96,#c084fc);
-      -webkit-background-clip: text;
-      color: transparent;
-      margin-bottom: 10px;
-    }
-    #time-total, #her-age {
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      justify-content:center;
-      margin-bottom: 25px;
-    }
-    .count-card {
-      background: rgba(15,23,42,0.4);
-      border: 1px solid rgba(255,255,255,0.04);
-      backdrop-filter: blur(14px);
-      border-radius: 14px;
-      min-width: 110px;
-      padding: 10px 14px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-    }
-    .count-card div {
-      font-size: 1.3rem;
-      font-weight: bold;
-      color: #fff;
-    }
-    .count-card span {
-      font-size: .75rem;
-      color: rgba(255,255,255,0.6);
-    }
+    #since { position: relative; z-index: 6; text-align: center; margin: 60px 0 50px; direction: ltr; }
+    #since h2 { background: linear-gradient(90deg,#ff5f96,#c084fc); -webkit-background-clip: text; color: transparent; margin-bottom: 10px; }
+    #time-total, #her-age { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-bottom: 25px; }
+    .count-card { background: rgba(15,23,42,0.4); border: 1px solid rgba(255,255,255,0.04); backdrop-filter: blur(14px); border-radius: 14px; min-width: 110px; padding: 10px 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
+    .count-card div { font-size: 1.3rem; font-weight: bold; color: #fff; }
+    .count-card span { font-size: .75rem; color: rgba(255,255,255,0.6); }
 
-    footer {
-      text-align: center;
-      color: rgba(255,255,255,0.4);
-      font-size: 0.8rem;
-      margin-top: 10px;
-      padding-bottom: 40px;
-    }
+    footer { text-align: center; color: rgba(255,255,255,0.4); font-size: 0.8rem; margin-top: 10px; padding-bottom: 40px; }
 
     /* layer für die floatenden Elemente (Herzen, Blumen, Ladybug) */
-    .love-layer {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 3; /* über fotos */
-    }
-    .float-love {
-      position: absolute;
-      bottom: -40px;
-      font-size: 26px;
-      animation: love-up 6s linear forwards;
-      opacity: 0.9;
-      filter: drop-shadow(0 0 8px rgba(255,255,255,0.5));
-    }
-    @keyframes love-up {
-      0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
-      10% { opacity: 1; }
-      100% { transform: translateY(-110vh) translateX(30px) rotate(8deg); opacity: 0; }
-    }
+    .love-layer { position: fixed; inset: 0; pointer-events: none; z-index: 3; }
+    .float-love { position: absolute; bottom: -40px; font-size: 26px; animation: love-up 6s linear forwards; opacity: 0.9; filter: drop-shadow(0 0 8px rgba(255,255,255,0.5)); }
+    @keyframes love-up { 0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; } 10% { opacity: 1; } 100% { transform: translateY(-110vh) translateX(30px) rotate(8deg); opacity: 0; } }
 
     @media (max-width: 650px) {
       .timeline::before { right: 15px; transform: none; }
       .bullet { right: 15px; transform: none; }
       .timeline-card { width: calc(100% - 35px); margin-right: 35px; }
-      .bg-photo { display: none; } /* damit es am Handy nicht zu voll wird */
+      .bg-photo { display: none; }
     }
   </style>
 </head>
@@ -290,7 +199,7 @@
           </div>
         </div>
       </div>
-	     <div class="timeline-item" data-anim="anim-slide-left">
+      <div class="timeline-item" data-anim="anim-slide-left">
         <div class="bullet"></div>
         <div class="timeline-card">
           <span class="timeline-date">2017</span>
@@ -300,7 +209,7 @@
           </div>
         </div>
       </div>
-	     <div class="timeline-item" data-anim="anim-slide-left">
+      <div class="timeline-item" data-anim="anim-slide-left">
         <div class="bullet"></div>
         <div class="timeline-card">
           <span class="timeline-date">2017</span>
@@ -310,7 +219,7 @@
           </div>
         </div>
       </div>
-	     <div class="timeline-item" data-anim="anim-slide-left">
+      <div class="timeline-item" data-anim="anim-slide-left">
         <div class="bullet"></div>
         <div class="timeline-card">
           <span class="timeline-date">2017</span>
@@ -320,7 +229,7 @@
           </div>
         </div>
       </div>
-	     <div class="timeline-item" data-anim="anim-slide-left">
+      <div class="timeline-item" data-anim="anim-slide-left">
         <div class="bullet"></div>
         <div class="timeline-card">
           <span class="timeline-date">2017</span>
@@ -330,7 +239,7 @@
           </div>
         </div>
       </div>
-	     <div class="timeline-item" data-anim="anim-slide-left">
+      <div class="timeline-item" data-anim="anim-slide-left">
         <div class="bullet"></div>
         <div class="timeline-card">
           <span class="timeline-date">2017</span>
@@ -340,7 +249,7 @@
           </div>
         </div>
       </div>
-	     <div class="timeline-item" data-anim="anim-slide-left">
+      <div class="timeline-item" data-anim="anim-slide-left">
         <div class="bullet"></div>
         <div class="timeline-card">
           <span class="timeline-date">2017</span>
@@ -350,17 +259,7 @@
           </div>
         </div>
       </div>
-	     <div class="timeline-item" data-anim="anim-slide-left">
-        <div class="bullet"></div>
-        <div class="timeline-card">
-          <span class="timeline-date">2017</span>
-          <div class="timeline-text">
-            <p>ضحك، حكي، تفاصيل صغيرة... صرتِ أقرب من روحي.</p>
-            <p>وكل يوم نحبك أكثر 💜</p>
-          </div>
-        </div>
-      </div>
-	     <div class="timeline-item" data-anim="anim-slide-left">
+      <div class="timeline-item" data-anim="anim-slide-left">
         <div class="bullet"></div>
         <div class="timeline-card">
           <span class="timeline-date">2017</span>
@@ -518,6 +417,7 @@
       setTimeout(() => word.remove(), 2200);
     });
   </script>
+
   <!-- Birthday overlay + fireworks (HTML container) -->
   <div id="birthday-overlay" style="display:none;">
     <div class="bd-content">
@@ -527,8 +427,8 @@
     <canvas id="fireworks-canvas"></canvas>
   </div>
 
-  <!-- Test button to trigger the countdown -->
-  <button id="test-birthday-btn" title="Test Geburtstag">Test 🎆</button>
+  <!-- زر تجربة العدّ التنازلي -->
+  <button id="test-birthday-btn" title="زر التجربة">تجربة 🎆</button>
 
   <!-- Optional: real song file (place file at static/audio/happy-birthday.mp3) -->
   <audio id="bd-audio-file" src="/audio/happy-birthday.mp3" preload="auto" loop style="display:none"></audio>
