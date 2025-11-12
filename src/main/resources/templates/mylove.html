@@ -1,304 +1,332 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8" />
-  <title>عيد ميلادك يا قلبي 🎂💜</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <!-- Birthday config (name, birthday YYYY-MM-DD) -->
-  <meta name="mylove-name" th:content="${@environment.getProperty('mylove.name','Mein Schatz')}" />
-  <meta name="mylove-birthday" th:content="${@environment.getProperty('mylove.birthday','1996-11-16')}" />
-  <style>
-    :root {
-      --pink: #ff5f96;
-      --lilac: #c084fc;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: "Tahoma", sans-serif;
-      background: radial-gradient(circle at top, #4c1d95 0%, #0f172a 35%, #0f172a 100%);
-      color: #fff;
-      line-height: 1.7;
-      overflow-x: hidden;
-      min-height: 100vh;
-      position: relative;
-    }
+    <meta charset="UTF-8"/>
+    <title>عيد ميلادك يا قلبي 🎂💜</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- Birthday config (name, birthday YYYY-MM-DD) -->
+    <meta name="mylove-name" th:content="${@environment.getProperty('mylove.name','Mein Schatz')}"/>
+    <meta name="mylove-birthday" th:content="${@environment.getProperty('mylove.birthday','1996-11-16')}"/>
+    <style>
+        :root {
+          --pink: #ff5f96;
+          --lilac: #c084fc;
+        }
+        * { box-sizing: border-box; }
+        body {
+          margin: 0;
+          font-family: "Tahoma", sans-serif;
+          background: radial-gradient(circle at top, #4c1d95 0%, #0f172a 35%, #0f172a 100%);
+          color: #fff;
+          line-height: 1.7;
+          overflow-x: hidden;
+          min-height: 100vh;
+          position: relative;
+        }
 
-    /* FOTO-COLLAGE (zurück!) */
-    .bg-collage {
-      position: fixed;
-      inset: 0;
-      z-index: 1; /* über blobs, unter love-layer und content */
-      pointer-events: none;
-      opacity: .38;
-    }
-    .bg-photo {
-      position: absolute;
-      width: 180px;
-      height: 120px;
-      background-size: cover;
-      background-position: center;
-      border-radius: 14px;
-      box-shadow: 0 10px 25px rgba(0,0,0,.25);
-      filter: saturate(1.05);
-    }
-    .r1 { transform: rotate(-6deg); }
-    .r2 { transform: rotate(4deg); }
-    .r3 { transform: rotate(-3deg); }
-    .r4 { transform: rotate(7deg); }
-    .r5 { transform: rotate(-9deg); }
+        /* FOTO-COLLAGE (zurück!) */
+        .bg-collage {
+          position: fixed;
+          inset: 0;
+          z-index: 1; /* über blobs, unter love-layer und content */
+          pointer-events: none;
+          opacity: .38;
+        }
+        .bg-photo {
+          position: absolute;
+          width: 180px;
+          height: 120px;
+          background-size: cover;
+          background-position: center;
+          border-radius: 14px;
+          box-shadow: 0 10px 25px rgba(0,0,0,.25);
+          filter: saturate(1.05);
+        }
+        .r1 { transform: rotate(-6deg); }
+        .r2 { transform: rotate(4deg); }
+        .r3 { transform: rotate(-3deg); }
+        .r4 { transform: rotate(7deg); }
+        .r5 { transform: rotate(-9deg); }
 
-    /* weiche blobs */
-    .bg-blob {
-      position: fixed;
-      border-radius: 9999px;
-      filter: blur(80px);
-      opacity: 0.35;
-      pointer-events: none;
-      z-index: 0;
-    }
-    .blob1 { width: 280px; height: 280px; background: #ff5f96; top: -60px; right: 5%; animation: blob 12s ease-in-out infinite; }
-    .blob2 { width: 280px; height: 280px; background: #c084fc; bottom: 5%; left: 10%; animation: blob 15s ease-in-out infinite; }
-    @keyframes blob {
-      0%,100% { transform: translateY(0) scale(1); }
-      50% { transform: translateY(20px) scale(1.1); }
-    }
+        /* weiche blobs */
+        .bg-blob {
+          position: fixed;
+          border-radius: 9999px;
+          filter: blur(80px);
+          opacity: 0.35;
+          pointer-events: none;
+          z-index: 0;
+        }
+        .blob1 { width: 280px; height: 280px; background: #ff5f96; top: -60px; right: 5%; animation: blob 12s ease-in-out infinite; }
+        .blob2 { width: 280px; height: 280px; background: #c084fc; bottom: 5%; left: 10%; animation: blob 15s ease-in-out infinite; }
+        @keyframes blob {
+          0%,100% { transform: translateY(0) scale(1); }
+          50% { transform: translateY(20px) scale(1.1); }
+        }
 
-    /* fixes Herz */
-    .corner-heart {
-      position: fixed;
-      top: 25px;
-      left: 25px;
-      font-size: 30px;
-      z-index: 60;
-      animation: beat 1.4s ease-in-out infinite;
-      filter: drop-shadow(0 0 12px rgba(255,95,150,0.7));
-    }
-    @keyframes beat {
-      0%,100% { transform: scale(1); }
-      50% { transform: scale(1.25); }
-    }
+        /* fixes Herz */
+        .corner-heart {
+          position: fixed;
+          top: 25px;
+          left: 25px;
+          font-size: 30px;
+          z-index: 60;
+          animation: beat 1.4s ease-in-out infinite;
+          filter: drop-shadow(0 0 12px rgba(255,95,150,0.7));
+        }
+        @keyframes beat {
+          0%,100% { transform: scale(1); }
+          50% { transform: scale(1.25); }
+        }
 
-    header {
-      text-align: center;
-      padding: 70px 20px 20px;
-      position: relative;
-      z-index: 5;
-    }
-    header h1 {
-      margin: 0;
-      font-size: clamp(2.2rem, 5vw, 2.7rem);
-      background: linear-gradient(90deg, #fff 0%, #ffcfdf 40%, #fff 80%);
-      -webkit-background-clip: text;
-      color: transparent;
-    }
-    header p {
-      margin-top: 10px;
-      color: rgba(255,255,255,0.8);
-    }
+        header {
+          text-align: center;
+          padding: 70px 20px 20px;
+          position: relative;
+          z-index: 5;
+        }
+        header h1 {
+          margin: 0;
+          font-size: clamp(2.2rem, 5vw, 2.7rem);
+          background: linear-gradient(90deg, #fff 0%, #ffcfdf 40%, #fff 80%);
+          -webkit-background-clip: text;
+          color: transparent;
+        }
+        header p {
+          margin-top: 10px;
+          color: rgba(255,255,255,0.8);
+        }
 
-    .content {
-      position: relative;
-      z-index: 5;
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 0 20px 70px;
-    }
+        .content {
+          position: relative;
+          z-index: 5;
+          max-width: 900px;
+          margin: 0 auto;
+          padding: 0 20px 70px;
+        }
 
-    /* timeline */
-    .timeline {
-      position: relative;
-      margin-top: 35px;
-      padding-bottom: 40px;
-    }
-    .timeline::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      right: 50%;
-      transform: translateX(50%);
-      width: 3px;
-      height: 100%;
-      background: linear-gradient(180deg, rgba(255,95,150,0), rgba(255,95,150,1), rgba(192,132,252,0));
-      filter: drop-shadow(0 0 10px rgba(255,95,150,.4));
-    }
-    .timeline-item { position: relative; margin-bottom: 30px; opacity: 0; transform: translateY(15px); }
-    .timeline-item.show { opacity: 1; transform: translateY(0); transition: .6s ease; }
-    .bullet { position: absolute; top: 12px; right: 50%; transform: translate(50%,0); width: 20px; height: 20px; background: radial-gradient(circle, #fff 0%, #ff5f96 60%); border: 3px solid rgba(255,255,255,.3); border-radius: 50%; box-shadow: 0 0 15px rgba(255,95,150,0.8); }
-    .timeline-card { background: rgba(15, 23, 42, 0.35); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,.08); border-radius: 20px; padding: 18px 20px 12px; width: min(80%, 560px); margin: 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,.25); }
-    .timeline-date { display: inline-block; background: linear-gradient(90deg, #ff5f96, #c084fc); color: #fff; padding: 5px 14px; border-radius: 999px; font-size: .75rem; margin-bottom: 8px; }
-    .timeline-text p { margin: 4px 0 6px; }
+        /* timeline */
+        .timeline {
+          position: relative;
+          margin-top: 35px;
+          padding-bottom: 40px;
+        }
+        .timeline::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          right: 50%;
+          transform: translateX(50%);
+          width: 3px;
+          height: 100%;
+          background: linear-gradient(180deg, rgba(255,95,150,0), rgba(255,95,150,1), rgba(192,132,252,0));
+          filter: drop-shadow(0 0 10px rgba(255,95,150,.4));
+        }
+        .timeline-item { position: relative; margin-bottom: 30px; opacity: 0; transform: translateY(15px); }
+        .timeline-item.show { opacity: 1; transform: translateY(0); transition: .6s ease; }
+        .bullet { position: absolute; top: 12px; right: 50%; transform: translate(50%,0); width: 20px; height: 20px; background: radial-gradient(circle, #fff 0%, #ff5f96 60%); border: 3px solid rgba(255,255,255,.3); border-radius: 50%; box-shadow: 0 0 15px rgba(255,95,150,0.8); }
+        .timeline-card { background: rgba(15, 23, 42, 0.35); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,.08); border-radius: 20px; padding: 18px 20px 12px; width: min(80%, 560px); margin: 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,.25); }
+        .timeline-date { display: inline-block; background: linear-gradient(90deg, #ff5f96, #c084fc); color: #fff; padding: 5px 14px; border-radius: 999px; font-size: .75rem; margin-bottom: 8px; }
+        .timeline-text p { margin: 4px 0 6px; }
 
-    /* unterer Bereich */
-    #since { position: relative; z-index: 6; text-align: center; margin: 60px 0 50px; direction: ltr; }
-    #since h2 { background: linear-gradient(90deg,#ff5f96,#c084fc); -webkit-background-clip: text; color: transparent; margin-bottom: 10px; }
-    #time-total, #her-age { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-bottom: 25px; }
-    .count-card { background: rgba(15,23,42,0.4); border: 1px solid rgba(255,255,255,0.04); backdrop-filter: blur(14px); border-radius: 14px; min-width: 110px; padding: 10px 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
-    .count-card div { font-size: 1.3rem; font-weight: bold; color: #fff; }
-    .count-card span { font-size: .75rem; color: rgba(255,255,255,0.6); }
+        /* unterer Bereich */
+        #since { position: relative; z-index: 6; text-align: center; margin: 60px 0 50px; direction: ltr; }
+        #since h2 { background: linear-gradient(90deg,#ff5f96,#c084fc); -webkit-background-clip: text; color: transparent; margin-bottom: 10px; }
+        #time-total, #her-age { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-bottom: 25px; }
+        .count-card { background: rgba(15,23,42,0.4); border: 1px solid rgba(255,255,255,0.04); backdrop-filter: blur(14px); border-radius: 14px; min-width: 110px; padding: 10px 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
+        .count-card div { font-size: 1.3rem; font-weight: bold; color: #fff; }
+        .count-card span { font-size: .75rem; color: rgba(255,255,255,0.6); }
 
-    footer { text-align: center; color: rgba(255,255,255,0.4); font-size: 0.8rem; margin-top: 10px; padding-bottom: 40px; }
+        footer { text-align: center; color: rgba(255,255,255,0.4); font-size: 0.8rem; margin-top: 10px; padding-bottom: 40px; }
 
-    /* layer für die floatenden Elemente (Herzen, Blumen, Ladybug) */
-    .love-layer { position: fixed; inset: 0; pointer-events: none; z-index: 3; }
-    .float-love { position: absolute; bottom: -40px; font-size: 26px; animation: love-up 6s linear forwards; opacity: 0.9; filter: drop-shadow(0 0 8px rgba(255,255,255,0.5)); }
-    @keyframes love-up { 0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; } 10% { opacity: 1; } 100% { transform: translateY(-110vh) translateX(30px) rotate(8deg); opacity: 0; } }
+        /* layer für die floatenden Elemente (Herzen, Blumen, Ladybug) */
+        .love-layer { position: fixed; inset: 0; pointer-events: none; z-index: 3; }
+        .float-love { position: absolute; bottom: -40px; font-size: 26px; animation: love-up 6s linear forwards; opacity: 0.9; filter: drop-shadow(0 0 8px rgba(255,255,255,0.5)); }
+        @keyframes love-up { 0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; } 10% { opacity: 1; } 100% { transform: translateY(-110vh) translateX(30px) rotate(8deg); opacity: 0; } }
 
-    @media (max-width: 650px) {
-      .timeline::before { right: 15px; transform: none; }
-      .bullet { right: 15px; transform: none; }
-      .timeline-card { width: calc(100% - 35px); margin-right: 35px; }
-      .bg-photo { display: none; }
-    }
-  </style>
+        @media (max-width: 650px) {
+          .timeline::before { right: 15px; transform: none; }
+          .bullet { right: 15px; transform: none; }
+          .timeline-card { width: calc(100% - 35px); margin-right: 35px; }
+          .bg-photo { display: none; }
+        }
+    </style>
 </head>
 <body>
-  <!-- blobs (ganz hinten) -->
-  <div class="bg-blob blob1"></div>
-  <div class="bg-blob blob2"></div>
+<script>
+    try {
+      if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }
+      const toTop = () => window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+      // On first load
+      toTop();
+      // After DOM ready
+      document.addEventListener('DOMContentLoaded', toTop);
+      // When returning via back/forward cache
+      window.addEventListener('pageshow', (e) => { if (e.persisted) toTop(); });
+    } catch (e) {}
+</script>
+<!-- blobs (ganz hinten) -->
+<div class="bg-blob blob1"></div>
+<div class="bg-blob blob2"></div>
 
-  <!-- FOTO-COLLAGE (wieder da) -->
-  <div class="bg-collage">
+<!-- FOTO-COLLAGE (wieder da) -->
+<div class="bg-collage">
     <div class="bg-photo r1" style="top:5%; left:6%; background-image:url('https://picsum.photos/400/300?1');"></div>
     <div class="bg-photo r2" style="top:20%; left:75%; background-image:url('https://picsum.photos/400/300?2');"></div>
     <div class="bg-photo r3" style="top:55%; left:4%; background-image:url('https://picsum.photos/400/300?3');"></div>
     <div class="bg-photo r4" style="top:70%; left:75%; background-image:url('https://picsum.photos/400/300?4');"></div>
     <div class="bg-photo r5" style="top:35%; left:45%; background-image:url('https://picsum.photos/400/300?5');"></div>
     <div class="bg-photo r2" style="top:82%; left:30%; background-image:url('https://picsum.photos/400/300?6');"></div>
-  </div>
+</div>
 
-  <div class="corner-heart">💜</div>
+<div class="corner-heart">💜</div>
 
-  <!-- layer für die süßen fliegenden Sachen -->
-  <div class="love-layer" id="loveLayer"></div>
+<!-- layer für die süßen fliegenden Sachen -->
+<div class="love-layer" id="loveLayer"></div>
 
-  <header>
+<header>
     <h1>عيد ميلاد سعيد يا أميرة قلبي 🎂💜</h1>
     <p>من 2016 لليوم... ومازلتِ أجمل حاجة في حياتي.</p>
-  </header>
+</header>
 
-  <main class="content">
+<main class="content">
     <section class="timeline" id="timeline">
-      <div class="timeline-item" data-anim="anim-slide-right">
-        <div class="bullet"></div>
-        <div class="timeline-card">
-          <span class="timeline-date">2016</span>
-          <div class="timeline-text">
-            <p>البداية ✨ اليوم اللي عرفتك فيه حسّيت الدنيا تغيّرت.</p>
-            <p>وقلت: هذي هي.</p>
-          </div>
+        <div class="timeline-item" data-anim="anim-slide-right">
+            <div class="bullet"></div>
+            <div class="timeline-card">
+                <span class="timeline-date">2016</span>
+                <div class="timeline-text">
+                    <p>البداية ✨ اليوم اللي عرفتك فيه حسّيت الدنيا تغيّرت.</p>
+                    <p>وقلت: هذي هي.</p>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="timeline-item" data-anim="anim-slide-left">
-        <div class="bullet"></div>
-        <div class="timeline-card">
-          <span class="timeline-date">2017</span>
-          <div class="timeline-text">
-            <p>ضحك، حكي، تفاصيل صغيرة... صرتِ أقرب من روحي.</p>
-            <p>وكل يوم نحبك أكثر 💜</p>
-          </div>
+        <div class="timeline-item" data-anim="anim-slide-left">
+            <div class="bullet"></div>
+            <div class="timeline-card">
+                <span class="timeline-date">2017</span>
+                <div class="timeline-text">
+                    <p>ضحك، حكي، تفاصيل صغيرة... صرتِ أقرب من روحي.</p>
+                    <p>وكل يوم نحبك أكثر 💜</p>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="timeline-item" data-anim="anim-slide-left">
-        <div class="bullet"></div>
-        <div class="timeline-card">
-          <span class="timeline-date">2017</span>
-          <div class="timeline-text">
-            <p>ضحك، حكي، تفاصيل صغيرة... صرتِ أقرب من روحي.</p>
-            <p>وكل يوم نحبك أكثر 💜</p>
-          </div>
+        <div class="timeline-item" data-anim="anim-slide-left">
+            <div class="bullet"></div>
+            <div class="timeline-card">
+                <span class="timeline-date">2017</span>
+                <div class="timeline-text">
+                    <p>ضحك، حكي، تفاصيل صغيرة... صرتِ أقرب من روحي.</p>
+                    <p>وكل يوم نحبك أكثر 💜</p>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="timeline-item" data-anim="anim-slide-left">
-        <div class="bullet"></div>
-        <div class="timeline-card">
-          <span class="timeline-date">2017</span>
-          <div class="timeline-text">
-            <p>ضحك، حكي، تفاصيل صغيرة... صرتِ أقرب من روحي.</p>
-            <p>وكل يوم نحبك أكثر 💜</p>
-          </div>
+        <div class="timeline-item" data-anim="anim-slide-left">
+            <div class="bullet"></div>
+            <div class="timeline-card">
+                <span class="timeline-date">2017</span>
+                <div class="timeline-text">
+                    <p>ضحك، حكي، تفاصيل صغيرة... صرتِ أقرب من روحي.</p>
+                    <p>وكل يوم نحبك أكثر 💜</p>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="timeline-item" data-anim="anim-slide-left">
-        <div class="bullet"></div>
-        <div class="timeline-card">
-          <span class="timeline-date">2017</span>
-          <div class="timeline-text">
-            <p>ضحك، حكي، تفاصيل صغيرة... صرتِ أقرب من روحي.</p>
-            <p>وكل يوم نحبك أكثر 💜</p>
-          </div>
+        <div class="timeline-item" data-anim="anim-slide-left">
+            <div class="bullet"></div>
+            <div class="timeline-card">
+                <span class="timeline-date">2017</span>
+                <div class="timeline-text">
+                    <p>ضحك، حكي، تفاصيل صغيرة... صرتِ أقرب من روحي.</p>
+                    <p>وكل يوم نحبك أكثر 💜</p>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="timeline-item" data-anim="anim-slide-left">
-        <div class="bullet"></div>
-        <div class="timeline-card">
-          <span class="timeline-date">2017</span>
-          <div class="timeline-text">
-            <p>ضحك، حكي، تفاصيل صغيرة... صرتِ أقرب من روحي.</p>
-            <p>وكل يوم نحبك أكثر 💜</p>
-          </div>
+        <div class="timeline-item" data-anim="anim-slide-left">
+            <div class="bullet"></div>
+            <div class="timeline-card">
+                <span class="timeline-date">2017</span>
+                <div class="timeline-text">
+                    <p>ضحك، حكي، تفاصيل صغيرة... صرتِ أقرب من روحي.</p>
+                    <p>وكل يوم نحبك أكثر 💜</p>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="timeline-item" data-anim="anim-slide-left">
-        <div class="bullet"></div>
-        <div class="timeline-card">
-          <span class="timeline-date">2017</span>
-          <div class="timeline-text">
-            <p>ضحك، حكي، تفاصيل صغيرة... صرتِ أقرب من روحي.</p>
-            <p>وكل يوم نحبك أكثر 💜</p>
-          </div>
+        <div class="timeline-item" data-anim="anim-slide-left">
+            <div class="bullet"></div>
+            <div class="timeline-card">
+                <span class="timeline-date">2017</span>
+                <div class="timeline-text">
+                    <p>ضحك، حكي، تفاصيل صغيرة... صرتِ أقرب من روحي.</p>
+                    <p>وكل يوم نحبك أكثر 💜</p>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="timeline-item" data-anim="anim-slide-left">
-        <div class="bullet"></div>
-        <div class="timeline-card">
-          <span class="timeline-date">2017</span>
-          <div class="timeline-text">
-            <p>ضحك، حكي، تفاصيل صغيرة... صرتِ أقرب من روحي.</p>
-            <p>وكل يوم نحبك أكثر 💜</p>
-          </div>
+        <div class="timeline-item" data-anim="anim-slide-left">
+            <div class="bullet"></div>
+            <div class="timeline-card">
+                <span class="timeline-date">2017</span>
+                <div class="timeline-text">
+                    <p>ضحك، حكي، تفاصيل صغيرة... صرتِ أقرب من روحي.</p>
+                    <p>وكل يوم نحبك أكثر 💜</p>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="timeline-item" data-anim="anim-slide-left">
-        <div class="bullet"></div>
-        <div class="timeline-card">
-          <span class="timeline-date">2017</span>
-          <div class="timeline-text">
-            <p>ضحك، حكي، تفاصيل صغيرة... صرتِ أقرب من روحي.</p>
-            <p>وكل يوم نحبك أكثر 💜</p>
-          </div>
+        <div class="timeline-item" data-anim="anim-slide-left">
+            <div class="bullet"></div>
+            <div class="timeline-card">
+                <span class="timeline-date">2017</span>
+                <div class="timeline-text">
+                    <p>ضحك، حكي، تفاصيل صغيرة... صرتِ أقرب من روحي.</p>
+                    <p>وكل يوم نحبك أكثر 💜</p>
+                </div>
+            </div>
         </div>
-      </div>
-      <!-- hier kannst du 2018..2024 weiterkopieren wie vorher -->
+        <!-- hier kannst du 2018..2024 weiterkopieren wie vorher -->
     </section>
 
     <section id="since">
-      <h2>مع بعض من 16 أبريل 2016 💜</h2>
-      <p style="margin-bottom:18px; color:rgba(255,255,255,0.7);">هدا الوقت كلووو وقلبي يقولك بحبك ❤️</p>
-      <div id="time-total">
-        <div class="count-card"><div id="years">0</div><span>سنة</span></div>
-        <div class="count-card"><div id="days">0</div><span>يوم</span></div>
-        <div class="count-card"><div id="hours">0</div><span>ساعة</span></div>
-        <div class="count-card"><div id="minutes">0</div><span>دقيقة</span></div>
-        <div class="count-card"><div id="seconds">0</div><span>ثانية</span></div>
-      </div>
-      <h3 style="color:#fff;margin-bottom:8px;">⏳ بحبك بكبر الرقم يلي رح تخربطي بقرائته</h3>
+        <h2>مع بعض من 16 أبريل 2016 💜</h2>
+        <p style="margin-bottom:18px; color:rgba(255,255,255,0.7);">هدا الوقت كلووو وقلبي يقولك بحبك ❤️</p>
+        <div id="time-total">
+            <div class="count-card">
+                <div id="years">0</div>
+                <span>سنة</span></div>
+            <div class="count-card">
+                <div id="days">0</div>
+                <span>يوم</span></div>
+            <div class="count-card">
+                <div id="hours">0</div>
+                <span>ساعة</span></div>
+            <div class="count-card">
+                <div id="minutes">0</div>
+                <span>دقيقة</span></div>
+            <div class="count-card">
+                <div id="seconds">0</div>
+                <span>ثانية</span></div>
+        </div>
+        <h3 style="color:#fff;margin-bottom:8px;">⏳ بحبك بكبر الرقم يلي رح تخربطي بقرائته</h3>
 
-      <h3 style="color:#fff;margin-bottom:8px; margin-top:25px;">🎂 عمر الوردة</h3>
-      <div id="her-age">
-        <div class="count-card"><div id="ageYears">0</div><span>سنة</span></div>
-        <div class="count-card"><div id="ageMonths">0</div><span>شهر</span></div>
-        <div class="count-card"><div id="ageDays">0</div><span>يوم</span></div>
-      </div>
+        <h3 style="color:#fff;margin-bottom:8px; margin-top:25px;">🎂 عمر الوردة</h3>
+        <div id="her-age">
+            <div class="count-card">
+                <div id="ageYears">0</div>
+                <span>سنة</span></div>
+            <div class="count-card">
+                <div id="ageMonths">0</div>
+                <span>شهر</span></div>
+            <div class="count-card">
+                <div id="ageDays">0</div>
+                <span>يوم</span></div>
+        </div>
     </section>
 
     <footer>
-      من ألمانيا للجزائر: نحبك 🎂💜
+        من ألمانيا للجزائر: نحبك 🎂💜
     </footer>
-  </main>
+</main>
 
-  <!-- scroll reveal -->
-  <script>
+<!-- scroll reveal -->
+<script>
     const items = document.querySelectorAll(".timeline-item");
     const observer = new IntersectionObserver((entries)=>{
       entries.forEach(entry=>{
@@ -309,10 +337,10 @@
       });
     },{threshold:0.4});
     items.forEach(i=>observer.observe(i));
-  </script>
+</script>
 
-  <!-- Zähler -->
-  <script>
+<!-- Zähler -->
+<script>
     const startDate = new Date(2016, 3, 1);
     const birthDate = new Date(1996, 10, 16);
 
@@ -349,10 +377,10 @@
     }
     updateCounts();
     setInterval(updateCounts, 1000);
-  </script>
+</script>
 
-  <!-- langsame schwebende Herzen / Blumen / Ladybugs -->
-  <script>
+<!-- langsame schwebende Herzen / Blumen / Ladybugs -->
+<script>
     const loveLayer = document.getElementById("loveLayer");
     const floatEmojis = ["💜", "💗", "🌸","🐞" ,"💖", "💘", "💝", "💞", "💓" ,"🐞","💕" ,"💌", "❤️", "😚" ,"😻","🐞"];
 
@@ -374,10 +402,10 @@
       setTimeout(() => el.remove(), duration * 1000);
     }
     setInterval(spawnLove, 1200);
-  </script>
+</script>
 
-  <!-- Klick-Herzen -->
-  <script>
+<!-- Klick-Herzen -->
+<script>
     const loveWords = [
       "بحبك 💜",
       "مشتقتلك 💗",
@@ -387,7 +415,7 @@
       "أجمل حاجة صارتلي 💐",
       "أحبك للأبد 💜",
       "❤️",
-      "💜"
+      "💜","فكي الحظر" ,"ردي عليي"
     ];
 
     document.addEventListener("click", function (e) {
@@ -416,24 +444,24 @@
 
       setTimeout(() => word.remove(), 2200);
     });
-  </script>
+</script>
 
-  <!-- Birthday overlay + fireworks (HTML container) -->
-  <div id="birthday-overlay" style="display:none;">
+<!-- Birthday overlay + fireworks (HTML container) -->
+<div id="birthday-overlay" style="display:none;">
     <div class="bd-content">
-      <div class="bd-count">60</div>
-      <div class="bd-msg"></div>
+        <div class="bd-count">60</div>
+        <div class="bd-msg"></div>
     </div>
     <canvas id="fireworks-canvas"></canvas>
-  </div>
+</div>
 
-  <!-- زر تجربة العدّ التنازلي -->
-  <button id="test-birthday-btn" title="زر التجربة">تجربة 🎆</button>
+<!-- زر تجربة العدّ التنازلي -->
+<button id="test-birthday-btn" title="زر التجربة">تجربة 🎆</button>
 
-  <!-- Optional: real song file (place file at static/audio/happy-birthday.mp3) -->
-  <audio id="bd-audio-file" src="/audio/happy-birthday.mp3" preload="auto" loop style="display:none"></audio>
+<!-- Optional: real song file (place file at static/audio/happy-birthday.mp3) -->
+<audio id="bd-audio-file" src="/audio/happy-birthday.mp3" preload="auto" loop style="display:none"></audio>
 
-  <!-- Feature script -->
-  <script src="/js/birthday.js"></script>
+<!-- Feature script -->
+<script src="/js/birthday.js"></script>
 </body>
 </html>

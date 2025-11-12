@@ -195,14 +195,14 @@
         countEl.style.display = 'none';
         msgEl.innerHTML = `ðŸŽ‚ ARABIC_BDAY, ${LOVE_NAME}!<span class="bd-age">Wird ${finishingAge} Jahre alt ðŸ’–</span>`;
         // رسالة التهنئة النهائية
-        msgEl.innerHTML = `🎂 عيد ميلاد سعيد، ${LOVE_NAME}!<span class=\"bd-age\">ستصبح بعمر ${finishingAge} سنة 💖</span>`;
+        msgEl.innerHTML = `🎂 عيد ميلاد سعيد، ${LOVE_NAME}!<span class=\"bd-age\">صرتي ${finishingAge} سنة 💖</span>`;
         try { window.bdKeepRunning = true; } catch {}
         startFireworks();
         try { startConfettiStream(); } catch {}
         try { ensureCloseButton(); } catch {}
         try { playBirthdayAudioPreferred(); } catch {}
         try { ensureAudioButton(); } catch {}
-        msgEl.innerHTML = `🎂 عيد ميلاد سعيد، ${LOVE_NAME}!<span class=\"bd-age\">ستصبح بعمر ${finishingAge} سنة 💖</span>`;
+        msgEl.innerHTML = `🎂 عيد ميلاد سعيد، ${LOVE_NAME}!<span class=\"bd-age\">صرتي ${finishingAge} سنة 💖</span>`;
         return;
       }
       try { playCountdownTick(remaining); } catch {}
@@ -245,7 +245,7 @@
       msgEl.innerHTML = `ðŸŽ‚ ARABIC_BDAY, ${LOVE_NAME}!<span class="bd-age">Wurde ${ageOn(now.getFullYear())} Jahre alt ðŸ’–</span>`;
       startFireworks();
       try { startConfettiStream(); } catch {}
-      msgEl.innerHTML = `🎂 عيد ميلاد سعيد، ${LOVE_NAME}!<span class=\"bd-age\">أصبحت الآن بعمر ${ageOn(now.getFullYear())} سنة 💖</span>`;
+      msgEl.innerHTML = `🎂 عيد ميلاد سعيد، ${LOVE_NAME}!<span class=\"bd-age\">صرتي الآن بعمر ${ageOn(now.getFullYear())} سنة 💖</span>`;
       try { playBirthdayAudioPreferred(); } catch {}
       try { ensureCloseButton(); } catch {}
       try { ensureAudioButton(); } catch {}
