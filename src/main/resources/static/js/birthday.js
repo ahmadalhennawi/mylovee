@@ -337,7 +337,7 @@ function ensureCloseButton() {
     btn = document.createElement('button');
     btn.id = 'bd-close';
     btn.type = 'button';
-    btn.textContent = 'إغلاق';
+    btn.textContent = '💜';
     overlay.appendChild(btn);
   }
   btn.onclick = stopAllEffects;
@@ -550,7 +550,7 @@ function ensureAudioButton() {
     btn = document.createElement('button');
     btn.id = 'bd-audio';
     btn.type = 'button';
-    btn.textContent = '🔊 موسيقى';
+    btn.textContent = '💜';
     overlay.appendChild(btn);
   }
   const refresh = () => {
@@ -752,15 +752,16 @@ function typeMessageLines(lines, index) {
 }
 
 // Tiny secret heart in corner with triple-click reveal
+// Tiny secret heart in corner with triple-click reveal
 function ensureSecretHeart() {
   const overlay = document.getElementById('birthday-overlay');
   if (!overlay) return;
-  // overlay-local heart button
+  // Always ensure an overlay-local heart button (overlay sits above everything)
   let css = document.getElementById('bd-secret-style');
   if (!css) {
     css = document.createElement('style');
     css.id = 'bd-secret-style';
-    css.textContent = `#bd-secret-heart{position:absolute;top:14px;left:14px;z-index:3;background:rgba(15,23,42,0.6);color:#fff;border:1px solid rgba(255,255,255,.2);padding:8px 10px;border-radius:10px;cursor:pointer;font-weight:800;backdrop-filter:blur(6px);box-shadow:0 6px 16px rgba(0,0,0,.25)}`;
+    css.textContent = `#bd-secret-heart{position:absolute;top:14px;left:14px;z-index:3;background:rgba(15,23,42,0.6);color:#fff;border:1px solid rgba(255,255,255,.2);padding:10px 14px;border-radius:12px;cursor:pointer;font-weight:800;backdrop-filter:blur(6px);box-shadow:0 6px 16px rgba(0,0,0,.25);touch-action:manipulation;-webkit-tap-highlight-color:transparent}`;
     document.head.appendChild(css);
   }
   let btn = document.getElementById('bd-secret-heart');
@@ -794,6 +795,7 @@ function ensureSecretHeart() {
     btn._bdSecretHooked = true;
   }
 }
+
 
 // Parse photo URLs from meta content: <meta name="mylove-photos" content="/img/a.jpg, /img/b.jpg">
 function getPhotoUrlsFromMeta() {
@@ -935,3 +937,5 @@ function runTypedSequence(texts, opts = {}) {
   try { msgEl.innerHTML = ""; } catch {}
   next();
 }
+
+
