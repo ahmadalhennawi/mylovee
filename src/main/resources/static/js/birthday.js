@@ -22,21 +22,49 @@
 
   if (!overlay || !countEl || !msgEl || !canvas) return;
 
-  // Inject minimal styles for the overlay and button to match the modern love vibe
+  // Test-Button nur bei ?testBirthday=1|now zeigen
+  try {
+    const url = new URLSearchParams(location.search);
+    const force = url.get('testBirthday');
+    testBtn.style.display = 'inline-flex';
+  } catch {}
+
+  // Styles für Overlay & Button
   const style = document.createElement('style');
   style.textContent = `
-    #birthday-overlay { position: fixed; inset: 0; z-index: 99999; display: none; align-items: center; justify-content: center; 
+    html, body { height: 100%; }
+    #birthday-overlay {
+      position: fixed; inset: 0; z-index: 99999;
+      display: none; align-items: center; justify-content: center;
       background: radial-gradient(1200px 800px at 50% 40%, rgba(76,29,149,0.95) 0%, rgba(15,23,42,0.95) 55%, rgba(15,23,42,0.98) 100%),
-                  linear-gradient(135deg, rgba(255,95,150,0.25), rgba(192,132,252,0.18)); }
+                  linear-gradient(135deg, rgba(255,95,150,0.25), rgba(192,132,252,0.18));
+      min-height: 100vh;
+    }
     #birthday-overlay .bd-content { position: relative; text-align: center; z-index: 2; padding: 20px 30px; }
-    #birthday-overlay .bd-count { font-size: clamp(4rem, 9vw, 9rem); font-weight: 800; letter-spacing: 2px; color: #fff; 
-      text-shadow: 0 10px 30px rgba(0,0,0,.4), 0 0 30px rgba(255,95,150,.5); }
-    #birthday-overlay .bd-msg { margin-top: 14px; color: #ffcfdf; font-size: clamp(1rem, 2.4vw, 1.6rem); opacity: 0; }
-    #birthday-overlay .bd-msg .bd-age { display: block; color: #fff; font-size: clamp(1.4rem, 3vw, 2rem); margin-top: 6px; }
+    #birthday-overlay .bd-count {
+      font-size: clamp(4rem, 12vw, 10rem); font-weight: 800;
+      letter-spacing: 2px; color: #fff;
+      text-shadow: 0 10px 30px rgba(0,0,0,.4), 0 0 30px rgba(255,95,150,.5);
+    }
+    #birthday-overlay .bd-msg {
+      margin-top: 14px; color: #ffcfdf;
+      font-size: clamp(1.3rem, 4vw, 2rem); opacity: 0;
+    }
+    #birthday-overlay .bd-msg .bd-age {
+      display: block; color: #fff;
+      font-size: clamp(1.6rem, 4.5vw, 2.4rem); margin-top: 6px;
+    }
     #fireworks-canvas { position: absolute; inset: 0; z-index: 1; }
-    #test-birthday-btn { position: fixed; right: 18px; bottom: 18px; z-index: 100000; background: linear-gradient(135deg,#ff5f96,#c084fc); 
-      color: #fff; border: none; border-radius: 999px; padding: 10px 16px; font-weight: 700; box-shadow: 0 8px 20px rgba(0,0,0,.25);
-      cursor: pointer; opacity: .85; transition: transform .15s ease, opacity .15s ease; }
+    #test-birthday-btn {
+      position: fixed; right: 18px; bottom: 18px; z-index: 100000;
+      background: linear-gradient(135deg,#ff5f96,#c084fc);
+      color: #fff; border: none; border-radius: 999px;
+      padding: 10px 16px; font-weight: 700;
+      box-shadow: 0 8px 20px rgba(0,0,0,.25);
+      cursor: pointer; opacity: .85;
+      transition: transform .15s ease, opacity .15s ease;
+      display: none; align-items: center; gap: 6px;
+    }
     #test-birthday-btn:hover { transform: translateY(-2px); opacity: 1; }
   `;
   document.head.appendChild(style);
@@ -67,37 +95,70 @@
 
   const ageOn = (year) => year - BY;
 
+  // ==== FIREWORKS STATE + FUNKTIONEN ====
   let fireworksRAF = null;
   let fwCtx = null;
   let particles = [];
   let rockets = [];
 
-  // Fireworks implementation (simple but pretty)
   function resizeCanvas() {
+    const rect = overlay.getBoundingClientRect();
     const dpr = Math.max(1, window.devicePixelRatio || 1);
-    canvas.width = Math.floor(canvas.clientWidth * dpr);
-    canvas.height = Math.floor(canvas.clientHeight * dpr);
-    fwCtx && fwCtx.scale(dpr, dpr);
+
+    canvas.style.width = rect.width + "px";
+    canvas.style.height = rect.height + "px";
+
+    canvas.width = Math.max(1, Math.floor(rect.width * dpr));
+    canvas.height = Math.max(1, Math.floor(rect.height * dpr));
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    fwCtx = ctx;
+    fwCtx.setTransform(1, 0, 0, 1, 0, 0);
+    fwCtx.scale(dpr, dpr);
   }
 
   function spawnRocket() {
-    const w = canvas.clientWidth;
-    const h = canvas.clientHeight;
+    const rect = overlay.getBoundingClientRect();
+    const w = rect.width;
+    const h = rect.height;
+    const isMobile = w < 768;
+
+    const minX = isMobile ? 0.30 : 0.20;
+    const maxX = isMobile ? 0.70 : 0.80;
+    const launchX = w * (minX + Math.random() * (maxX - minX));
+    const launchY = h + 10;
+
+    const vyStart = -(5.5 + Math.random() * 2.0);
+    const vxRange = isMobile ? 0.5 : 1.3;
+    const vxStart = (Math.random() - 0.5) * vxRange;
+
+    const minBurst = 0.25;
+    const maxBurst = isMobile ? 0.40 : 0.45;
+    const burstY = h * (minBurst + Math.random() * (maxBurst - minBurst));
+
     rockets.push({
-      x: Math.random() * w,
-      y: h + 10,
-      vx: (Math.random() - 0.5) * 1.2,
-      vy: -(7 + Math.random() * 3),
+      x: launchX,
+      y: launchY,
+      vx: vxStart,
+      vy: vyStart,
       color: `hsl(${Math.floor(Math.random() * 360)}, 80%, 60%)`,
-      life: 60 + Math.random() * 20
+      life: 70 + Math.random() * 30,
+      burstY: burstY
     });
   }
 
   function burst(x, y, color) {
-    const count = 40 + Math.random() * 30;
+    const rect = overlay.getBoundingClientRect();
+    const isMobile = rect.width < 768;
+
+    const base = isMobile ? 20 : 38;
+    const count = base + Math.random() * (isMobile ? 15 : 25);
+    const baseSpeed = isMobile ? 1.2 : 2.2;
+
     for (let i = 0; i < count; i++) {
       const angle = Math.random() * Math.PI * 2;
-      const speed = 2 + Math.random() * 3.5;
+      const speed = baseSpeed + Math.random() * (isMobile ? 1.0 : 2.0);
       particles.push({
         x,
         y,
@@ -106,20 +167,26 @@
         alpha: 1,
         color,
         gravity: 0.06 + Math.random() * 0.04,
-        fade: 0.015 + Math.random() * 0.02
+        fade: 0.013 + Math.random() * 0.02
       });
     }
   }
 
   function runFireworks() {
-    fwCtx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+    if (!fwCtx) return;
+
+    const rect = overlay.getBoundingClientRect();
+    const w = rect.width;
+    const h = rect.height;
+
+    fwCtx.clearRect(0, 0, w, h);
 
     // rockets
     for (let i = rockets.length - 1; i >= 0; i--) {
       const r = rockets[i];
       r.x += r.vx;
       r.y += r.vy;
-      r.vy += 0.08; // gravity
+      r.vy += 0.08;
       r.life -= 1;
 
       fwCtx.beginPath();
@@ -127,7 +194,7 @@
       fwCtx.fillStyle = r.color;
       fwCtx.fill();
 
-      if (r.life <= 0 || r.vy >= 0) {
+      if ((typeof r.burstY === "number" && r.y <= r.burstY) || r.life <= 0 || r.vy >= 0) {
         burst(r.x, r.y, r.color);
         rockets.splice(i, 1);
       }
@@ -152,17 +219,13 @@
       fwCtx.globalAlpha = 1;
     }
 
-    // spawn rockets randomly
-    if (Math.random() < 0.08) spawnRocket();
+    const rocketChance = w < 600 ? 0.04 : 0.08;
+    if (Math.random() < rocketChance) spawnRocket();
 
     fireworksRAF = requestAnimationFrame(runFireworks);
   }
 
   function startFireworks() {
-    fwCtx = canvas.getContext('2d');
-    // size canvas to overlay size
-    canvas.style.width = '100%';
-    canvas.style.height = '100%';
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
     if (!fireworksRAF) fireworksRAF = requestAnimationFrame(runFireworks);
@@ -175,39 +238,43 @@
     window.removeEventListener('resize', resizeCanvas);
     particles = [];
     rockets = [];
+    const rect = overlay.getBoundingClientRect();
     const ctx = canvas.getContext('2d');
-    ctx && ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+    ctx && ctx.clearRect(0, 0, rect.width, rect.height);
   }
 
+  // für globale Verwendung
+  try {
+    window.bdStartFireworks = startFireworks;
+    window.bdStopFireworks = stopFireworks;
+  } catch {}
+
+  // ==== OVERLAY / COUNTDOWN ====
   function showOverlay(durationSec, finishingAge) {
     overlay.style.display = 'flex';
     overlay.setAttribute('aria-hidden', 'false');
     countEl.style.display = '';
     msgEl.innerHTML = '';
 
-    // extra cute effects during countdown
-    try { startTwinkles(80); } catch {}
+    try { startTwinkles(30); } catch {}
     try { startBalloons(); } catch {}
 
     let remaining = Math.max(0, Math.floor(durationSec));
     countEl.textContent = format(remaining);
 
-    // confetti at the end of countdown
-    try { setTimeout(() => startConfetti(120), remaining * 1000); } catch {}
+    try { setTimeout(() => startConfetti(60), remaining * 1000); } catch {}
 
-    const tick = () => {
+    const timer = setInterval(() => {
       remaining -= 1;
       if (remaining <= 0) {
         clearInterval(timer);
         countEl.style.display = 'none';
-        // Enhanced finale: run multi-stage sequence and stop here
         try { startFinalSequence(finishingAge); } catch {}
         return;
       }
       try { playCountdownTick(remaining); } catch {}
       countEl.textContent = format(remaining);
-    };
-    const timer = setInterval(tick, 1000);
+    }, 1000);
   }
 
   let overlayShown = false;
@@ -216,39 +283,38 @@
     const now = new Date();
     const target = nextBirthdayMidnight(now);
     const diffSec = Math.floor((target - now) / 1000);
-    const url = new URLSearchParams(location.search);
-    const force = url.get('testBirthday');
+
+    let force = null;
+    try {
+      const url = new URLSearchParams(location.search);
+      force = url.get('testBirthday');
+    } catch {}
 
     if (overlayShown) return;
 
     if (force === '1' || force === 'now') {
-      // Test: run short countdown
       showOverlay(10, ageOn(target.getFullYear()));
       overlayShown = true;
       return;
     }
 
-    // If we are in the last 60s before midnight of birthday, start countdown
     if (diffSec > 0 && diffSec <= 60) {
       showOverlay(diffSec, ageOn(target.getFullYear()));
       overlayShown = true;
       return;
     }
 
-    // If it's the birthday just after midnight (first minute), show greeting + fireworks
     const todayMidnight = birthdayOfYear(now.getFullYear());
     if (sameDay(now, todayMidnight) && now - todayMidnight <= 60 * 1000) {
       overlay.style.display = 'flex';
       overlay.setAttribute('aria-hidden', 'false');
       countEl.style.display = 'none';
-      // Enhanced finale when already birthday just after midnight
       try { startFinalSequence(ageOn(now.getFullYear())); } catch {}
       overlayShown = true;
       return;
     }
   }
 
-  // Hook test button
   if (testBtn) {
     testBtn.addEventListener('click', (e) => {
       try { e && e.preventDefault && e.preventDefault(); } catch {}
@@ -258,7 +324,6 @@
     });
   }
 
-  // Run on load and keep checking until shown
   checkSchedule();
   const scheduleTimer = setInterval(() => {
     if (overlayShown) { clearInterval(scheduleTimer); return; }
@@ -266,10 +331,11 @@
   }, 1000);
 })();
 
-// Persistent finale helpers and surprises
+// ======== PERSISTENTE HELFER (GLOBAL) ========
+
 function startConfettiStream() {
   try { if (window.bdConfettiStream) return window.bdConfettiStream; } catch {}
-  const id = setInterval(() => startConfetti(40 + Math.floor(Math.random() * 40)), 1800);
+  const id = setInterval(() => startConfetti(20 + Math.floor(Math.random() * 20)), 2200);
   try { window.bdConfettiStream = id; } catch {}
   return id;
 }
@@ -337,8 +403,7 @@ function ensureCloseButton() {
     btn = document.createElement('button');
     btn.id = 'bd-close';
     btn.type = 'button';
-    btn.textContent = '💜';
-    try { btn.setAttribute('aria-label','اضغطي 3 مرات'); } catch {}
+    btn.textContent = 'إغلاق';
     overlay.appendChild(btn);
   }
   btn.onclick = stopAllEffects;
@@ -356,10 +421,10 @@ function stopAllEffects() {
   try { window.bdStopTwinkles && window.bdStopTwinkles(); } catch {}
   try { document.getElementById('birthday-overlay').style.display = 'none'; } catch {}
   try { document.getElementById('birthday-overlay').setAttribute('aria-hidden', 'true'); } catch {}
-  try { stopFireworks(); } catch {}
+  try { window.bdStopFireworks && window.bdStopFireworks(); } catch {}
 }
 
-// In case finale gets triggered by midnight branch, switch to persistent mode automatically
+// Finale-Observer: wenn Countdown-Zahl weg ist → Dauer-Finale
 (function observeFinale() {
   const overlay = document.getElementById('birthday-overlay');
   const count = overlay ? overlay.querySelector('.bd-count') : null;
@@ -380,7 +445,7 @@ function stopAllEffects() {
   }, 1000);
 })();
 
-// Audio: Happy Birthday melody (Web Audio API)
+// ======= AUDIO (WebAudio + optional MP3) =======
 let bdAudio = { ctx: null, master: null, timers: [], playing: false };
 let bdTrack = { el: null, playing: false };
 
@@ -390,7 +455,7 @@ function ensureAudioCtx() {
   if (!AudioCtx) return null;
   const ctx = new AudioCtx();
   const master = ctx.createGain();
-  master.gain.value = 0.15; // gentle volume
+  master.gain.value = 0.15;
   master.connect(ctx.destination);
   bdAudio.ctx = ctx;
   bdAudio.master = master;
@@ -414,14 +479,11 @@ function stopBirthdaySong() {
   bdAudio.playing = false;
   try { bdAudio.timers.forEach(id => clearTimeout(id)); } catch {}
   bdAudio.timers = [];
-  // do not close context; just leave it for reuse
 }
 
-// Short tick/chime for countdown seconds
 function playCountdownTick(remaining) {
   const ctx = ensureAudioCtx();
   if (!ctx) return;
-  // be polite: if user hasn’t interacted and autoplay is blocked, this may be silent until unblocked
   const now = ctx.currentTime + 0.01;
   const osc = ctx.createOscillator();
   const g = ctx.createGain();
@@ -456,8 +518,8 @@ async function startBirthdayTrack() {
     await el.play();
     bdTrack.playing = true;
     return true;
-  } catch (e) {
-    return false; // likely autoplay blocked
+  } catch {
+    return false;
   }
 }
 
@@ -468,14 +530,12 @@ function stopBirthdayTrack() {
   bdTrack.playing = false;
 }
 
-// Prefer real audio track; fall back to synth if missing/blocked
 async function playBirthdayAudioPreferred() {
   const ok = await startBirthdayTrack();
   if (!ok && !bdAudio.playing) startBirthdaySong();
 }
 
 function noteFreq(n) {
-  // n like 'G4', 'C5'; supports sharps with '#'
   const A4 = 440;
   const SEMI = Math.pow(2, 1 / 12);
   const map = {
@@ -512,8 +572,7 @@ function tone(ctx, freq, when, dur, gain = 0.25) {
 function playSongLoop() {
   if (!bdAudio.playing) return;
   const ctx = bdAudio.ctx;
-  const beat = 0.48; // seconds per beat (~125 bpm)
-  // Happy Birthday melody (notes with durations in beats)
+  const beat = 0.48;
   const part = [
     ['G4', 1], ['G4', 1], ['A4', 2], ['G4', 2], ['C5', 2], ['B4', 4],
     ['G4', 1], ['G4', 1], ['A4', 2], ['G4', 2], ['D5', 2], ['C5', 4],
@@ -533,12 +592,10 @@ function playSongLoop() {
   bdAudio.timers.push(id);
 }
 
-// Audio UI helper: show a small button to enable sound if blocked
 function ensureAudioButton() {
   const overlay = document.getElementById('birthday-overlay');
   if (!overlay) return;
-  // show if either WebAudio or HTMLAudio track is available
-  if (!ensureAudioCtx() && !ensureAudioFile()) return; // no audio support
+  if (!ensureAudioCtx() && !ensureAudioFile()) return;
   let css = document.getElementById('bd-audio-style');
   if (!css) {
     css = document.createElement('style');
@@ -551,8 +608,7 @@ function ensureAudioButton() {
     btn = document.createElement('button');
     btn.id = 'bd-audio';
     btn.type = 'button';
-    btn.textContent = '💜';
-    try { btn.setAttribute('aria-label','اضغطي 3 مرات'); } catch {}
+    btn.textContent = '🔊 موسيقى';
     overlay.appendChild(btn);
   }
   const refresh = () => {
@@ -570,7 +626,7 @@ function ensureAudioButton() {
   refresh();
 }
 
-// Cute effects implementations (global helpers)
+// ==== Balloons, Confetti, Twinkles ====
 function startBalloons() {
   const overlay = document.getElementById('birthday-overlay');
   if (!overlay) return () => {};
@@ -601,8 +657,8 @@ function startBalloons() {
     overlay.appendChild(b);
     setTimeout(() => b.remove(), dur * 1000 + 400);
   };
-  const timer = setInterval(spawn, 500);
-  for (let i = 0; i < 8; i++) setTimeout(spawn, i * 120);
+  const timer = setInterval(spawn, 1000);
+  for (let i = 0; i < 3; i++) setTimeout(spawn, i * 200);
   const stopper = () => { active = false; clearInterval(timer); };
   try { window.bdStopBalloons = stopper; } catch {}
   return stopper;
@@ -661,8 +717,7 @@ function startTwinkles(n = 60) {
   return stopper;
 }
 
-
-// === Finale sequence: multi-stage program (message -> letter -> stats -> secret) ===
+// === Finale sequence ===
 function startFinalSequence(finishingAge) {
   const overlay = document.getElementById('birthday-overlay');
   const msgEl = overlay ? overlay.querySelector('.bd-msg') : null;
@@ -674,29 +729,25 @@ function startFinalSequence(finishingAge) {
   };
   const LOVE_NAME = getMeta('mylove-name') || 'Mein Schatz';
 
-  // 1) Big personal message right after countdown
   msgEl.innerHTML = `
     🎂 عيد ميلاد سعيد، ${LOVE_NAME}!
     <span class="bd-age">صرتي ${finishingAge} سنة يا لموش 💖</span>
   `;
   msgEl.style.opacity = "1";
 
-  // Persist & start effects
   try { window.bdKeepRunning = true; } catch {}
-  try { startFireworks(); } catch {}
+  try { window.bdStartFireworks && window.bdStartFireworks(); } catch {}
   try { startConfettiStream(); } catch {}
   try { ensureCloseButton(); } catch {}
   try { playBirthdayAudioPreferred(); } catch {}
   try { ensureAudioButton(); } catch {}
   try { startHeartTrail(); } catch {}
 
-  // Mark sequence as active (damit Fallback-Texte nicht doppelt laufen)
   try { window.bdSeqActive = true; } catch {}
 
-  // Build sequence texts dynamic
   try {
     const nowForSeq = new Date();
-    const startDateForSeq = new Date(2016, 3, 16); // 16. April 2016
+    const startDateForSeq = new Date(2016, 3, 16); // 16.04.2016
     const diffMsForSeq = nowForSeq - startDateForSeq;
     const totalDaysForSeq = Math.floor(diffMsForSeq / (1000 * 60 * 60 * 24));
 
@@ -718,7 +769,6 @@ function startFinalSequence(finishingAge) {
     runTypedSequence(seq, { speed: 55, pauseMs: 3000, fadeMs: 700 });
   } catch {}
 
-  // 2.5) After 40s — start mini photo slideshow (if photos provided)
   setTimeout(() => {
     try {
       const urls = getPhotoUrlsFromMeta();
@@ -727,7 +777,7 @@ function startFinalSequence(finishingAge) {
   }, 40000);
 }
 
-// Typewriter effect for arrays of lines (Fallback, wenn man es separat nutzen will)
+// Einfacher Zeilen-Typer (Backup)
 function typeMessageLines(lines, index) {
   const overlay = document.getElementById('birthday-overlay');
   const msgEl = overlay ? overlay.querySelector('.bd-msg') : null;
@@ -753,19 +803,32 @@ function typeMessageLines(lines, index) {
   }, 60);
 }
 
-// Tiny secret heart in corner with triple-click reveal
-// Tiny secret heart in corner with triple-click reveal
+// Secret-Herz: 3 Klicks, erst am Ende aktiv
+window.bdSecretEnabled = false;
+
 function ensureSecretHeart() {
   const overlay = document.getElementById('birthday-overlay');
   if (!overlay) return;
-  // Always ensure an overlay-local heart button (overlay sits above everything)
+
   let css = document.getElementById('bd-secret-style');
   if (!css) {
     css = document.createElement('style');
     css.id = 'bd-secret-style';
-    css.textContent = `#bd-secret-heart{position:absolute;top:14px;left:14px;z-index:3;background:rgba(15,23,42,0.6);color:#fff;border:1px solid rgba(255,255,255,.2);padding:10px 14px;border-radius:12px;cursor:pointer;font-weight:800;backdrop-filter:blur(6px);box-shadow:0 6px 16px rgba(0,0,0,.25);touch-action:manipulation;-webkit-tap-highlight-color:transparent}`;
+    css.textContent = `
+      #bd-secret-heart{
+        position:absolute;top:14px;left:14px;z-index:3;
+        background:rgba(15,23,42,0.6);color:#fff;
+        border:1px solid rgba(255,255,255,.2);
+        padding:10px 14px;border-radius:12px;
+        cursor:pointer;font-weight:800;
+        backdrop-filter:blur(6px);
+        box-shadow:0 6px 16px rgba(0,0,0,.25);
+        touch-action:manipulation;
+        -webkit-tap-highlight-color:transparent
+      }`;
     document.head.appendChild(css);
   }
+
   let btn = document.getElementById('bd-secret-heart');
   if (!btn) {
     btn = document.createElement('button');
@@ -773,16 +836,19 @@ function ensureSecretHeart() {
     btn.type = 'button';
     btn.title = 'اضغطي 3 مرات';
     btn.textContent = '💜';
-    try { btn.setAttribute('aria-label','اضغطي 3 مرات'); } catch {}
     overlay.appendChild(btn);
   }
+
   if (!btn._bdSecretHooked) {
     let clicks = 0;
-    let t = null;
+    try {
+      btn.addEventListener('pointerdown', (e) => {
+        if (e && e.pointerType && e.pointerType !== 'mouse') { e.preventDefault(); btn.click(); }
+      }, { passive: false });
+    } catch {}
     btn.addEventListener('click', () => {
+      if (!window.bdSecretEnabled) return;
       clicks += 1;
-      if (t) clearTimeout(t);
-      t = setTimeout(() => { clicks = 0; }, 1200);
       if (clicks >= 3) {
         clicks = 0;
         const msgEl = overlay.querySelector('.bd-msg');
@@ -799,15 +865,14 @@ function ensureSecretHeart() {
   }
 }
 
-
-// Parse photo URLs from meta content: <meta name="mylove-photos" content="/img/a.jpg, /img/b.jpg">
+// Fotos aus Meta
 function getPhotoUrlsFromMeta() {
   const m = document.querySelector('meta[name="mylove-photos"]');
   if (!m || !m.content) return [];
   return m.content.split(',').map(s => s.trim()).filter(Boolean);
 }
 
-// Simple rotating photo card in overlay, cycles every ~18s
+// Fotoshow im Overlay
 function ensurePhotoSlideshow(urls, intervalMs = 18000) {
   const overlay = document.getElementById('birthday-overlay');
   if (!overlay) return;
@@ -820,11 +885,11 @@ function ensurePhotoSlideshow(urls, intervalMs = 18000) {
         const m = bg.match(/url\((?:"|')?([^\)"']+)(?:"|')?\)/);
         return m ? m[1] : '';
       }).filter(Boolean);
-      list = pick.slice(0, 4); // at most 4
+      list = pick.slice(0, 4);
     } catch {}
   }
   if (!list.length) return;
-  if (window.bdPhotosTimer) return; // already running
+  if (window.bdPhotosTimer) return;
 
   let css = document.getElementById('bd-photos-style');
   if (!css) {
@@ -879,7 +944,7 @@ function ensurePhotoSlideshow(urls, intervalMs = 18000) {
         requestAnimationFrame(() => img.classList.add('show'));
       }, 120);
     };
-    tmp.onerror = () => { /* skip broken image */ };
+    tmp.onerror = () => {};
     tmp.src = url;
   };
 
@@ -891,7 +956,7 @@ function ensurePhotoSlideshow(urls, intervalMs = 18000) {
   try { window.bdPhotosTimer = timer; } catch {}
 }
 
-// Typed sequence runner: types text, waits, fades, then next
+// Typing-Sequence
 function runTypedSequence(texts, opts = {}) {
   const overlay = document.getElementById("birthday-overlay");
   const msgEl = overlay ? overlay.querySelector(".bd-msg") : null;
@@ -927,7 +992,12 @@ function runTypedSequence(texts, opts = {}) {
   const next = () => {
     if (idx >= texts.length) return;
     const t = texts[idx];
+    const isLast = (idx === texts.length - 1);
     typeOne(t, () => {
+      if (isLast) {
+        try { window.bdSecretEnabled = true; } catch {}
+        return;
+      }
       setTimeout(() => {
         fadeOut(() => {
           idx++;
@@ -940,6 +1010,3 @@ function runTypedSequence(texts, opts = {}) {
   try { msgEl.innerHTML = ""; } catch {}
   next();
 }
-
-
-
