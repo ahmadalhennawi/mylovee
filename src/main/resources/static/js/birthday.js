@@ -338,6 +338,7 @@ function ensureCloseButton() {
     btn.id = 'bd-close';
     btn.type = 'button';
     btn.textContent = '💜';
+    try { btn.setAttribute('aria-label','اضغطي 3 مرات'); } catch {}
     overlay.appendChild(btn);
   }
   btn.onclick = stopAllEffects;
@@ -551,6 +552,7 @@ function ensureAudioButton() {
     btn.id = 'bd-audio';
     btn.type = 'button';
     btn.textContent = '💜';
+    try { btn.setAttribute('aria-label','اضغطي 3 مرات'); } catch {}
     overlay.appendChild(btn);
   }
   const refresh = () => {
@@ -771,6 +773,7 @@ function ensureSecretHeart() {
     btn.type = 'button';
     btn.title = 'اضغطي 3 مرات';
     btn.textContent = '💜';
+    try { btn.setAttribute('aria-label','اضغطي 3 مرات'); } catch {}
     overlay.appendChild(btn);
   }
   if (!btn._bdSecretHooked) {
@@ -937,5 +940,6 @@ function runTypedSequence(texts, opts = {}) {
   try { msgEl.innerHTML = ""; } catch {}
   next();
 }
+
 
 
