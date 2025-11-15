@@ -366,6 +366,12 @@
         return;
       }
 
+      // Audio-Kontext beim ersten Klick für den Test-Modus aktivieren
+      const ctx = ensureAudioCtx();
+      if (ctx && ctx.state === 'suspended') {
+        ctx.resume().catch(err => console.error("Audio resume failed on test click:", err));
+      }
+
       const nb = nextBirthdayMidnight(new Date());
       bdState.overlayShown = true;
       showOverlay(10, ageOn(nb.getFullYear()));
