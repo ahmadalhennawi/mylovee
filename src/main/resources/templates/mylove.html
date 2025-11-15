@@ -87,7 +87,7 @@
         }
         header h1 {
           margin: 0;
-          font-size: clamp(2.2rem, 5vw, 2.7rem);
+          font-size: clamp(2.4rem, 6vw, 3rem);
           background: linear-gradient(90deg, #fff 0%, #ffcfdf 40%, #fff 80%);
           -webkit-background-clip: text;
           color: transparent;
@@ -125,30 +125,105 @@
         .timeline-item { position: relative; margin-bottom: 30px; opacity: 0; transform: translateY(15px); }
         .timeline-item.show { opacity: 1; transform: translateY(0); transition: .6s ease; }
         .bullet { position: absolute; top: 12px; right: 50%; transform: translate(50%,0); width: 20px; height: 20px; background: radial-gradient(circle, #fff 0%, #ff5f96 60%); border: 3px solid rgba(255,255,255,.3); border-radius: 50%; box-shadow: 0 0 15px rgba(255,95,150,0.8); }
-        .timeline-card { background: rgba(15, 23, 42, 0.35); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,.08); border-radius: 20px; padding: 18px 20px 12px; width: min(80%, 560px); margin: 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,.25); }
-        .timeline-date { display: inline-block; background: linear-gradient(90deg, #ff5f96, #c084fc); color: #fff; padding: 5px 14px; border-radius: 999px; font-size: .75rem; margin-bottom: 8px; }
-        .timeline-text p { margin: 4px 0 6px; }
+        .timeline-card {
+          background: rgba(15, 23, 42, 0.35);
+          backdrop-filter: blur(12px);
+          border: 1px solid rgba(255,255,255,.08);
+          border-radius: 20px;
+          padding: 18px 20px 12px;
+          width: min(80%, 560px);
+          margin: 0 auto;
+          box-shadow: 0 10px 30px rgba(0,0,0,.25);
+        }
+        .timeline-date {
+          display: inline-block;
+          background: linear-gradient(90deg, #ff5f96, #c084fc);
+          color: #fff;
+          padding: 5px 14px;
+          border-radius: 999px;
+          font-size: .8rem;
+          margin-bottom: 8px;
+        }
+        .timeline-text p {
+          margin: 4px 0 6px;
+          font-size: 1rem;
+        }
 
         /* unterer Bereich */
-        #since { position: relative; z-index: 6; text-align: center; margin: 60px 0 50px; direction: ltr; }
-        #since h2 { background: linear-gradient(90deg,#ff5f96,#c084fc); -webkit-background-clip: text; color: transparent; margin-bottom: 10px; }
-        #time-total, #her-age { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-bottom: 25px; }
-        .count-card { background: rgba(15,23,42,0.4); border: 1px solid rgba(255,255,255,0.04); backdrop-filter: blur(14px); border-radius: 14px; min-width: 110px; padding: 10px 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
-        .count-card div { font-size: 1.3rem; font-weight: bold; color: #fff; }
-        .count-card span { font-size: .75rem; color: rgba(255,255,255,0.6); }
+        #since {
+          position: relative;
+          z-index: 6;
+          text-align: center;
+          margin: 60px 0 50px;
+          direction: ltr;
+        }
+        #since h2 {
+          background: linear-gradient(90deg,#ff5f96,#c084fc);
+          -webkit-background-clip: text;
+          color: transparent;
+          margin-bottom: 10px;
+        }
+        #time-total, #her-age {
+          display:flex;
+          gap:10px;
+          flex-wrap:wrap;
+          justify-content:center;
+          margin-bottom: 25px;
+        }
+        .count-card {
+          background: rgba(15,23,42,0.4);
+          border: 1px solid rgba(255,255,255,0.04);
+          backdrop-filter: blur(14px);
+          border-radius: 14px;
+          min-width: 110px;
+          padding: 10px 14px;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+        }
+        .count-card div {
+          font-size: 1.3rem;
+          font-weight: bold;
+          color: #fff;
+        }
+        .count-card span {
+          font-size: .75rem;
+          color: rgba(255,255,255,0.6);
+        }
 
-        footer { text-align: center; color: rgba(255,255,255,0.4); font-size: 0.8rem; margin-top: 10px; padding-bottom: 40px; }
+        footer {
+          text-align: center;
+          color: rgba(255,255,255,0.4);
+          font-size: 0.8rem;
+          margin-top: 10px;
+          padding-bottom: 40px;
+        }
 
         /* layer für die floatenden Elemente (Herzen, Blumen, Ladybug) */
-        .love-layer { position: fixed; inset: 0; pointer-events: none; z-index: 3; }
-        .float-love { position: absolute; bottom: -40px; font-size: 26px; animation: love-up 6s linear forwards; opacity: 0.9; filter: drop-shadow(0 0 8px rgba(255,255,255,0.5)); }
-        @keyframes love-up { 0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; } 10% { opacity: 1; } 100% { transform: translateY(-110vh) translateX(30px) rotate(8deg); opacity: 0; } }
+        .love-layer {
+          position: fixed;
+          inset: 0;
+          pointer-events: none;
+          z-index: 3;
+        }
+        .float-love {
+          position: absolute;
+          bottom: -40px;
+          font-size: 26px;
+          animation: love-up 6s linear forwards;
+          opacity: 0.9;
+          filter: drop-shadow(0 0 8px rgba(255,255,255,0.5));
+        }
+        @keyframes love-up {
+          0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+          10% { opacity: 1; }
+          100% { transform: translateY(-110vh) translateX(30px) rotate(8deg); opacity: 0; }
+        }
 
         @media (max-width: 650px) {
           .timeline::before { right: 15px; transform: none; }
           .bullet { right: 15px; transform: none; }
           .timeline-card { width: calc(100% - 35px); margin-right: 35px; }
           .bg-photo { display: none; }
+          .timeline-text p { font-size: 1.05rem; }
         }
     </style>
 </head>
@@ -186,107 +261,171 @@
 
 <header>
     <h1>عيد ميلاد سعيد يا أميرة قلبي 🎂💜</h1>
-    <p>من 2016 لليوم... ومازلتِ أجمل حاجة في حياتي.</p>
+    <p>من 2016 لليوم... ولسّا إنتِ أحلى حاجة صارت بحياتي.</p>
 </header>
 
 <main class="content">
     <section class="timeline" id="timeline">
+        <!-- 2016 -->
         <div class="timeline-item" data-anim="anim-slide-right">
             <div class="bullet"></div>
             <div class="timeline-card">
-                <span class="timeline-date">2016</span>
+                <span class="timeline-date">2016 – البداية</span>
                 <div class="timeline-text">
-                    <p>البداية ✨ اليوم اللي عرفتك فيه حسّيت الدنيا تغيّرت.</p>
-                    <p>وقلت: هذي هي.</p>
+                    <p>السنة اللي عرفتك فيها… من أوّل كلمة بيناتنا قلبي وقف شوي وقال:</p>
+                    <p>«هاي هي… هاي المرأة اللي بدي كمّل معاها عمري.»</p>
+                    <p>حسّيتك مو بس بنت، حسّيتك مستقبلي، قدري، وراحة قلبي من جوّا.</p>
                 </div>
             </div>
         </div>
+
+        <!-- 2017 -->
         <div class="timeline-item" data-anim="anim-slide-left">
             <div class="bullet"></div>
             <div class="timeline-card">
-                <span class="timeline-date">2017</span>
+                <span class="timeline-date">2017 – حب وخوف</span>
                 <div class="timeline-text">
-                    <p>ضحك، حكي، تفاصيل صغيرة... صرتِ أقرب من روحي.</p>
-                    <p>وكل يوم نحبك أكثر 💜</p>
+                    <p>سنة مشاعر كلها ملخبطة… شوي نقرّب، شوي نِبعد، شوي نِسكت، شوي نحكي.</p>
+                    <p>بس مع كل هالتعب، ما قدرت نهرب منك ولا يوم.</p>
+                    <p>كنت نقول بيني وبين روحي: «حتى لو أخاف، قلبي راجع لعندك دايماً.»</p>
                 </div>
             </div>
         </div>
+
+        <!-- 2018 -->
+        <div class="timeline-item" data-anim="anim-slide-right">
+            <div class="bullet"></div>
+            <div class="timeline-card">
+                <span class="timeline-date">2018 – سند قلبي</span>
+                <div class="timeline-text">
+                    <p>كنتِ دايماً معي، حتى وأنا يمكن مو دايماً قدّك.</p>
+                    <p>تسمعي همومي، وتحملي تعبي، وتواسيني بكلمتين صغار يهزو الدنيا عندي.</p>
+                    <p>حسّيت إنّو مهما الدنيا تقسى، في وحدة واقفة ضهري: إنتِ يا لموش.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2019 -->
         <div class="timeline-item" data-anim="anim-slide-left">
             <div class="bullet"></div>
             <div class="timeline-card">
-                <span class="timeline-date">2017</span>
+                <span class="timeline-date">2019 – سكوت بس مو نسيان</span>
                 <div class="timeline-text">
-                    <p>ضحك، حكي، تفاصيل صغيرة... صرتِ أقرب من روحي.</p>
-                    <p>وكل يوم نحبك أكثر 💜</p>
+                    <p>سنة ما حكينا فيها كتير… المسافات كبرت، والكلام قلّ.</p>
+                    <p>بس والله ولا يوم طلعتي من بالي، ولا ليلة نمت من غير ما أتذكرك.</p>
+                    <p>كنتي بعيدة عن عيوني، بس كنتِ دايماً جوّا تفكيري وقلبـي.</p>
                 </div>
             </div>
         </div>
+
+        <!-- 2020 -->
+        <div class="timeline-item" data-anim="anim-slide-right">
+            <div class="bullet"></div>
+            <div class="timeline-card">
+                <span class="timeline-date">2020 – حيرة وظروف</span>
+                <div class="timeline-text">
+                    <p>الدنيا كانت مقلوبة… ظروفي لخبطتني، حياتي كانت فوضى شوي.</p>
+                    <p>بس رغم كل هالضياع، صورتك بقت ثابتة جوّا راسي.</p>
+                    <p>كل ما أضيع، قلبي يرجع يتذكّر إنّو في وحدة هناك هي الأمان تاعي… إنتِ.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2021 -->
         <div class="timeline-item" data-anim="anim-slide-left">
             <div class="bullet"></div>
             <div class="timeline-card">
-                <span class="timeline-date">2017</span>
+                <span class="timeline-date">2021 – صبر وانتظار</span>
                 <div class="timeline-text">
-                    <p>ضحك، حكي، تفاصيل صغيرة... صرتِ أقرب من روحي.</p>
-                    <p>وكل يوم نحبك أكثر 💜</p>
+                    <p>سنة بين شدّ وجذب… كل واحد فينا بمكان، بس القلوب مربوطة ببعض.</p>
+                    <p>كنّا يمكن نحاول نكمّل حياتنا، بس كل ما نرجع نهدى، نرجع نفكّر ببعض من جديد.</p>
+                    <p>كان كأنّو ربّي عم يعلّمنا الصبر قبل ما يجمعنا صح.</p>
                 </div>
             </div>
         </div>
+
+        <!-- 2022 -->
+        <div class="timeline-item" data-anim="anim-slide-right">
+            <div class="bullet"></div>
+            <div class="timeline-card">
+                <span class="timeline-date">2022 – فهمت إنّك نصيبي</span>
+                <div class="timeline-text">
+                    <p>في 2022 حسّيت بشي واضح جوّا قلبي:</p>
+                    <p>«هاي البنت مو مرور عابر… هاي قدري.»</p>
+                    <p>فهمت إنّك الكنز اللي ربّي حطّه بيدي، ولازم ما أضيّعك ولا أفرّط فيك مهما صار.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2023 -->
         <div class="timeline-item" data-anim="anim-slide-left">
             <div class="bullet"></div>
             <div class="timeline-card">
-                <span class="timeline-date">2017</span>
+                <span class="timeline-date">2023 – الحب تضاعف</span>
                 <div class="timeline-text">
-                    <p>ضحك، حكي، تفاصيل صغيرة... صرتِ أقرب من روحي.</p>
-                    <p>وكل يوم نحبك أكثر 💜</p>
+                    <p>الحب بهي السنة صار غير… حسّيته أعمق، أنضج، أقوى.</p>
+                    <p>صرت مقتنع من قلبي: «مستحيل بحياتي أحب حدا مثل ما أحببتك إنتِ.»</p>
+                    <p>صار عندي يقين إنّك حبيبتي، وصاحبتي، ووطن قلبي كله.</p>
                 </div>
             </div>
         </div>
+
+        <!-- 2024 -->
+        <div class="timeline-item" data-anim="anim-slide-right">
+            <div class="bullet"></div>
+            <div class="timeline-card">
+                <span class="timeline-date">2024 – أوّل لقاء وروح رجعت تعيش</span>
+                <div class="timeline-text">
+                    <p>هاي السنة اللي شفتك فيها وجهاً لوجه… أول لقاء بيناتنا.</p>
+                    <p>والله كأني رجعت تولّدت من جديد بس شفت عيونك قدّامي.</p>
+                    <p>بآخر 2024 رجعت لعندك لأنّي عنجد ما عاد قدرت أتحمّل فكرة حياة بلاك… قلبي اختار ورجع لك.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- أواخر 2024 / بداية 2025: رجعة قوية -->
         <div class="timeline-item" data-anim="anim-slide-left">
             <div class="bullet"></div>
             <div class="timeline-card">
-                <span class="timeline-date">2017</span>
+                <span class="timeline-date">نهاية 2024 – رجوعي لعندك</span>
                 <div class="timeline-text">
-                    <p>ضحك، حكي، تفاصيل صغيرة... صرتِ أقرب من روحي.</p>
-                    <p>وكل يوم نحبك أكثر 💜</p>
+                    <p>بنهاية 2024 حسّيت إنّي مهما حاولت أكون قوي… بدونك أنا ولا شي.</p>
+                    <p>رجعت لعندك بقلبي كامل، مو نص نص، وقررت قدّامي إنّو ما أتركك مرّة تانية.</p>
+                    <p>من هداك اليوم وأنا شايف مستقبلي مرتبط بإيدك وإنتِ حدّي.</p>
                 </div>
             </div>
         </div>
+
+        <!-- 2025 -->
+        <div class="timeline-item" data-anim="anim-slide-right">
+            <div class="bullet"></div>
+            <div class="timeline-card">
+                <span class="timeline-date">2025 – أصعب سنة وصبر المسافات</span>
+                <div class="timeline-text">
+                    <p>2025 يمكن أصعب سنة عليّ… لأني حاسس فيك، حاسس بحبك، بس ما زلتي بعيدة.</p>
+                    <p>أصعب شعور إنّو روحك تكون معاي، بس جسمك لسا مو جنبي.</p>
+                    <p>بس مع كل هالألم، تعلّمت إنّو الصبر طريقنا لنلتقي، وإنّو كل يوم يمر يقرّبنا من بعض أكثر.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2026 -->
         <div class="timeline-item" data-anim="anim-slide-left">
             <div class="bullet"></div>
             <div class="timeline-card">
-                <span class="timeline-date">2017</span>
+                <span class="timeline-date">2026 – سنة الذهب وحياتنا الجديدة (إن شاء الله)</span>
                 <div class="timeline-text">
-                    <p>ضحك، حكي، تفاصيل صغيرة... صرتِ أقرب من روحي.</p>
-                    <p>وكل يوم نحبك أكثر 💜</p>
+                    <p>2026 هي السنة اللي بدّي ياها تكون ذهبية… سنة اجتماعنا الحقيقي إن شاء الله.</p>
+                    <p>سنة نبدأ فيها حياتنا الجديدة تحت سقف واحد، بقلب واحد، بطريق واحد.</p>
+                    <p>من 2016 لـ 2026… وكل هالسنين ما كانت إلا تجهيز للي رح نعيشه سوا لباقي العمر، بحب نظيف، إحترام، ومشاعر ما تنتهي.</p>
                 </div>
             </div>
         </div>
-        <div class="timeline-item" data-anim="anim-slide-left">
-            <div class="bullet"></div>
-            <div class="timeline-card">
-                <span class="timeline-date">2017</span>
-                <div class="timeline-text">
-                    <p>ضحك، حكي، تفاصيل صغيرة... صرتِ أقرب من روحي.</p>
-                    <p>وكل يوم نحبك أكثر 💜</p>
-                </div>
-            </div>
-        </div>
-        <div class="timeline-item" data-anim="anim-slide-left">
-            <div class="bullet"></div>
-            <div class="timeline-card">
-                <span class="timeline-date">2017</span>
-                <div class="timeline-text">
-                    <p>ضحك، حكي، تفاصيل صغيرة... صرتِ أقرب من روحي.</p>
-                    <p>وكل يوم نحبك أكثر 💜</p>
-                </div>
-            </div>
-        </div>
-        <!-- hier kannst du 2018..2024 weiterkopieren wie vorher -->
     </section>
 
     <section id="since">
         <h2>مع بعض من 16 أبريل 2016 💜</h2>
-        <p style="margin-bottom:18px; color:rgba(255,255,255,0.7);">هدا الوقت كلووو وقلبي يقولك بحبك ❤️</p>
+        <p style="margin-bottom:18px; color:rgba(255,255,255,0.7);">هدا الوقت كلووو وقلبي كل يوم يناجيكي: بحبك ❤️</p>
         <div id="time-total">
             <div class="count-card">
                 <div id="years">0</div>
@@ -304,7 +443,7 @@
                 <div id="seconds">0</div>
                 <span>ثانية</span></div>
         </div>
-        <h3 style="color:#fff;margin-bottom:8px;">⏳ بحبك بكبر الرقم يلي رح تخربطي بقرائته</h3>
+        <h3 style="color:#fff;margin-bottom:8px;">⏳ بحبك بكبر الرقم يلي رح تتعبـي لتقريه</h3>
 
         <h3 style="color:#fff;margin-bottom:8px; margin-top:25px;">🎂 عمر الوردة</h3>
         <div id="her-age">
@@ -319,7 +458,6 @@
                 <span>يوم</span></div>
         </div>
     </section>
-
 
     <footer>
         من ألمانيا للجزائر: نحبك 🎂💜
@@ -342,7 +480,8 @@
 
 <!-- Zähler -->
 <script>
-    const startDate = new Date(2016, 3, 1);
+    // 16 أبريل 2016
+    const startDate = new Date(2016, 3, 16);
     const birthDate = new Date(1996, 10, 16);
 
     function updateCounts(){
@@ -449,31 +588,31 @@
 
 <!-- Mini-ETA-Badge (wird automatisch versteckt, wenn <= 60s) -->
 <div id="bd-eta-pill" aria-live="polite" title="كم تبقّى لبدء العرض؟">
-  <span class="bd-eta-label">باقي:</span>
-  <span id="bdEtaText">—</span>
-  </div>
+    <span class="bd-eta-label">باقي:</span>
+    <span id="bdEtaText">—</span>
+</div>
 
 <style>
-  #bd-eta-pill{
-    position: fixed;
-    top: 14px;
-    right: 14px;
-    z-index: 70;
-    background: rgba(15,23,42,0.55);
-    border: 1px solid rgba(255,255,255,0.15);
-    backdrop-filter: blur(10px);
-    color: #fff;
-    padding: 8px 12px;
-    border-radius: 999px;
-    font-size: .9rem;
-    box-shadow: 0 8px 20px rgba(0,0,0,.25);
-  }
-  #bd-eta-pill.hidden{ display:none; }
-  #bd-eta-pill .bd-eta-label{
-    background: linear-gradient(90deg,#ff5f96,#c084fc);
-    -webkit-background-clip: text; color: transparent;
-    font-weight: 700; margin-inline-end: 6px;
-  }
+    #bd-eta-pill{
+      position: fixed;
+      top: 14px;
+      right: 14px;
+      z-index: 70;
+      background: rgba(15,23,42,0.55);
+      border: 1px solid rgba(255,255,255,0.15);
+      backdrop-filter: blur(10px);
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: .9rem;
+      box-shadow: 0 8px 20px rgba(0,0,0,.25);
+    }
+    #bd-eta-pill.hidden{ display:none; }
+    #bd-eta-pill .bd-eta-label{
+      background: linear-gradient(90deg,#ff5f96,#c084fc);
+      -webkit-background-clip: text; color: transparent;
+      font-weight: 700; margin-inline-end: 6px;
+    }
 </style>
 
 <!-- Birthday overlay + fireworks (HTML container) -->
@@ -493,46 +632,46 @@
 
 <!-- Mini-Badge Logik: zeigt verbleibende Zeit bis zur letzten Minute -->
 <script>
-// ==== Mini-Badge bis zur letzten Minute, dann ausblenden (Overlay übernimmt) ====
-(function(){
-  const meta = (name) => { const m = document.querySelector(`meta[name="${name}"]`); return (m && m.content) ? m.content.trim() : ""; };
-  const BIRTHDAY_STR = meta('mylove-birthday') || '1996-11-16';
-  const parts = BIRTHDAY_STR.split('-');
-  if (parts.length !== 3) return;
-  const BY = parseInt(parts[0],10), BM = parseInt(parts[1],10), BD = parseInt(parts[2],10);
-  if (!BY || !BM || !BD) return;
+    // ==== Mini-Badge bis zur letzten Minute, dann ausblenden (Overlay übernimmt) ====
+    (function(){
+      const meta = (name) => { const m = document.querySelector(`meta[name="${name}"]`); return (m && m.content) ? m.content.trim() : ""; };
+      const BIRTHDAY_STR = meta('mylove-birthday') || '1996-11-16';
+      const parts = BIRTHDAY_STR.split('-');
+      if (parts.length !== 3) return;
+      const BY = parseInt(parts[0],10), BM = parseInt(parts[1],10), BD = parseInt(parts[2],10);
+      if (!BY || !BM || !BD) return;
 
-  const pill = document.getElementById('bd-eta-pill');
-  const txt  = document.getElementById('bdEtaText');
-  if (!pill || !txt) return;
+      const pill = document.getElementById('bd-eta-pill');
+      const txt  = document.getElementById('bdEtaText');
+      if (!pill || !txt) return;
 
-  const birthdayOfYear = (year) => { const d = new Date(year, BM - 1, BD); d.setHours(0,0,0,0); return d; };
-  const nextBirthdayMidnight = (now) => { const thisYear = birthdayOfYear(now.getFullYear()); return (thisYear > now) ? thisYear : birthdayOfYear(now.getFullYear() + 1); };
+      const birthdayOfYear = (year) => { const d = new Date(year, BM - 1, BD); d.setHours(0,0,0,0); return d; };
+      const nextBirthdayMidnight = (now) => { const thisYear = birthdayOfYear(now.getFullYear()); return (thisYear > now) ? thisYear : birthdayOfYear(now.getFullYear() + 1); };
 
-  function fmtRemaining(sec){
-    const d = Math.floor(sec / 86400); sec %= 86400;
-    const h = Math.floor(sec / 3600); sec %= 3600;
-    const m = Math.floor(sec / 60);
-    if (d > 0) return `${d.toLocaleString('ar')} يوم ${h.toLocaleString('ar')} ساعة`;
-    if (h > 0) return `${h.toLocaleString('ar')} ساعة ${m.toLocaleString('ar')} دقيقة`;
-    return `${m.toLocaleString('ar')} دقيقة`;
-  }
+      function fmtRemaining(sec){
+        const d = Math.floor(sec / 86400); sec %= 86400;
+        const h = Math.floor(sec / 3600); sec %= 3600;
+        const m = Math.floor(sec / 60);
+        if (d > 0) return `${d.toLocaleString('ar')} يوم ${h.toLocaleString('ar')} ساعة`;
+        if (h > 0) return `${h.toLocaleString('ar')} ساعة ${m.toLocaleString('ar')} دقيقة`;
+        return `${m.toLocaleString('ar')} دقيقة`;
+      }
 
-  function tick(){
-    const now = new Date();
-    const target = nextBirthdayMidnight(now);
-    let diff = Math.floor((target - now) / 1000);
-    if (diff <= 60) { pill.classList.add('hidden'); }
-    else { pill.classList.remove('hidden'); txt.textContent = fmtRemaining(diff); pill.setAttribute('aria-label', `باقي ${txt.textContent} لبدء العرض`); }
-  }
+      function tick(){
+        const now = new Date();
+        const target = nextBirthdayMidnight(now);
+        let diff = Math.floor((target - now) / 1000);
+        if (diff <= 60) { pill.classList.add('hidden'); }
+        else { pill.classList.remove('hidden'); txt.textContent = fmtRemaining(diff); pill.setAttribute('aria-label', `باقي ${txt.textContent} لبدء العرض`); }
+      }
 
-  tick();
-  const id = setInterval(tick, 15000);
-  document.addEventListener('visibilitychange', () => { if (document.hidden) { try { clearInterval(id); } catch {} } });
-})();
+      tick();
+      const id = setInterval(tick, 15000);
+      document.addEventListener('visibilitychange', () => { if (document.hidden) { try { clearInterval(id); } catch {} } });
+    })();
 </script>
 
-<!-- Feature script -->
+<!-- Feature script (dein großes birthday.js mit Feuerwerk usw.) -->
 <script src="/js/birthday.js"></script>
 </body>
 </html>

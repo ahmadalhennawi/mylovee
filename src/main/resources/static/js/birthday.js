@@ -22,11 +22,15 @@
 
   if (!overlay || !countEl || !msgEl || !canvas) return;
 
-  // Test-Button nur bei ?testBirthday=1|now zeigen
+  // Test-Button nur bei ?testBirthday=1|now sichtbar
   try {
     const url = new URLSearchParams(location.search);
-    const force = url.get('testBirthday');
-    testBtn.style.display = 'inline-flex';
+    const force ="1";
+    if (force === '1' || force === 'now') {
+      if (testBtn) testBtn.style.display = 'inline-flex';
+    } else {
+      if (testBtn) testBtn.style.display = 'none';
+    }
   } catch {}
 
   // Styles für Overlay & Button
@@ -40,21 +44,34 @@
                   linear-gradient(135deg, rgba(255,95,150,0.25), rgba(192,132,252,0.18));
       min-height: 100vh;
     }
-    #birthday-overlay .bd-content { position: relative; text-align: center; z-index: 2; padding: 20px 30px; }
+    #birthday-overlay .bd-content {
+      position: relative; text-align: center; z-index: 2;
+      padding: 20px 30px;
+    }
     #birthday-overlay .bd-count {
-      font-size: clamp(4rem, 12vw, 10rem); font-weight: 800;
-      letter-spacing: 2px; color: #fff;
+      font-size: clamp(4rem, 12vw, 10rem);
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: #fff;
       text-shadow: 0 10px 30px rgba(0,0,0,.4), 0 0 30px rgba(255,95,150,.5);
     }
     #birthday-overlay .bd-msg {
-      margin-top: 14px; color: #ffcfdf;
-      font-size: clamp(1.3rem, 4vw, 2rem); opacity: 0;
+      margin-top: 14px;
+      color: #ffcfdf;
+      font-size: clamp(1.3rem, 4vw, 2rem);
+      opacity: 0;
     }
     #birthday-overlay .bd-msg .bd-age {
-      display: block; color: #fff;
-      font-size: clamp(1.6rem, 4.5vw, 2.4rem); margin-top: 6px;
+      display: block;
+      color: #fff;
+      font-size: clamp(1.6rem, 4.5vw, 2.4rem);
+      margin-top: 6px;
     }
-    #fireworks-canvas { position: absolute; inset: 0; z-index: 1; }
+    #fireworks-canvas {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+    }
     #test-birthday-btn {
       position: fixed; right: 18px; bottom: 18px; z-index: 100000;
       background: linear-gradient(135deg,#ff5f96,#c084fc);
@@ -95,6 +112,14 @@
 
   const ageOn = (year) => year - BY;
 
+  // ===== Globaler Zustand, damit nichts doppelt läuft =====
+  const bdState = (window.bdState = window.bdState || {
+    countdownTimer: null,
+    scheduleTimer: null,
+    overlayShown: false,
+    finaleStarted: false
+  });
+
   // ==== FIREWORKS STATE + FUNKTIONEN ====
   let fireworksRAF = null;
   let fwCtx = null;
@@ -124,6 +149,7 @@
     const h = rect.height;
     const isMobile = w < 768;
 
+    // Auf Handy eher Mitte des Screens, auf PC etwas breiter verteilt
     const minX = isMobile ? 0.30 : 0.20;
     const maxX = isMobile ? 0.70 : 0.80;
     const launchX = w * (minX + Math.random() * (maxX - minX));
@@ -133,6 +159,7 @@
     const vxRange = isMobile ? 0.5 : 1.3;
     const vxStart = (Math.random() - 0.5) * vxRange;
 
+    // Burst eher im oberen Bereich, damit man die Explosion komplett sieht
     const minBurst = 0.25;
     const maxBurst = isMobile ? 0.40 : 0.45;
     const burstY = h * (minBurst + Math.random() * (maxBurst - minBurst));
@@ -233,8 +260,10 @@
 
   function stopFireworks() {
     try { if (window && window.bdKeepRunning) return; } catch {}
-    cancelAnimationFrame(fireworksRAF);
-    fireworksRAF = null;
+    if (fireworksRAF) {
+      cancelAnimationFrame(fireworksRAF);
+      fireworksRAF = null;
+    }
     window.removeEventListener('resize', resizeCanvas);
     particles = [];
     rockets = [];
@@ -249,12 +278,17 @@
     window.bdStopFireworks = stopFireworks;
   } catch {}
 
-  // ==== OVERLAY / COUNTDOWN ====
+  // ==== OVERLAY / COUNTDOWN (stabil, nur 1x) ====
   function showOverlay(durationSec, finishingAge) {
+    if (testBtn) testBtn.style.display = 'none';
+
     overlay.style.display = 'flex';
     overlay.setAttribute('aria-hidden', 'false');
     countEl.style.display = '';
     msgEl.innerHTML = '';
+
+    ensureAudioCtx();
+    ensureSoundActivationButton();
 
     try { startTwinkles(30); } catch {}
     try { startBalloons(); } catch {}
@@ -264,10 +298,17 @@
 
     try { setTimeout(() => startConfetti(60), remaining * 1000); } catch {}
 
+    // Falls schon ein Countdown lief → stoppen
+    if (bdState.countdownTimer) {
+      try { clearInterval(bdState.countdownTimer); } catch {}
+      bdState.countdownTimer = null;
+    }
+
     const timer = setInterval(() => {
       remaining -= 1;
       if (remaining <= 0) {
-        clearInterval(timer);
+        try { clearInterval(timer); } catch {}
+        bdState.countdownTimer = null;
         countEl.style.display = 'none';
         try { startFinalSequence(finishingAge); } catch {}
         return;
@@ -275,9 +316,9 @@
       try { playCountdownTick(remaining); } catch {}
       countEl.textContent = format(remaining);
     }, 1000);
-  }
 
-  let overlayShown = false;
+    bdState.countdownTimer = timer;
+  }
 
   function checkSchedule() {
     const now = new Date();
@@ -290,17 +331,17 @@
       force = url.get('testBirthday');
     } catch {}
 
-    if (overlayShown) return;
+    if (bdState.overlayShown) return;
 
     if (force === '1' || force === 'now') {
       showOverlay(10, ageOn(target.getFullYear()));
-      overlayShown = true;
+      bdState.overlayShown = true;
       return;
     }
 
     if (diffSec > 0 && diffSec <= 60) {
       showOverlay(diffSec, ageOn(target.getFullYear()));
-      overlayShown = true;
+      bdState.overlayShown = true;
       return;
     }
 
@@ -310,25 +351,40 @@
       overlay.setAttribute('aria-hidden', 'false');
       countEl.style.display = 'none';
       try { startFinalSequence(ageOn(now.getFullYear())); } catch {}
-      overlayShown = true;
+      bdState.overlayShown = true;
       return;
     }
   }
 
+  // Test-Button → startet nur, wenn kein Countdown läuft
   if (testBtn) {
     testBtn.addEventListener('click', (e) => {
       try { e && e.preventDefault && e.preventDefault(); } catch {}
+
+      if (bdState.countdownTimer) {
+        // schon ein Countdown → ignoriere weiteren Klick
+        return;
+      }
+
       const nb = nextBirthdayMidnight(new Date());
-      overlayShown = true;
+      bdState.overlayShown = true;
       showOverlay(10, ageOn(nb.getFullYear()));
     });
   }
 
+  // Direkt beim Laden checken
   checkSchedule();
-  const scheduleTimer = setInterval(() => {
-    if (overlayShown) { clearInterval(scheduleTimer); return; }
-    checkSchedule();
-  }, 1000);
+
+  if (!bdState.scheduleTimer) {
+    bdState.scheduleTimer = setInterval(() => {
+      if (bdState.overlayShown) {
+        try { clearInterval(bdState.scheduleTimer); } catch {}
+        bdState.scheduleTimer = null;
+        return;
+      }
+      checkSchedule();
+    }, 1000);
+  }
 })();
 
 // ======== PERSISTENTE HELFER (GLOBAL) ========
@@ -422,6 +478,18 @@ function stopAllEffects() {
   try { document.getElementById('birthday-overlay').style.display = 'none'; } catch {}
   try { document.getElementById('birthday-overlay').setAttribute('aria-hidden', 'true'); } catch {}
   try { window.bdStopFireworks && window.bdStopFireworks(); } catch {}
+
+  // Timer + State resetten
+  try {
+    const s = window.bdState;
+    if (s) {
+      if (s.countdownTimer) { clearInterval(s.countdownTimer); s.countdownTimer = null; }
+      if (s.scheduleTimer)  { clearInterval(s.scheduleTimer);  s.scheduleTimer  = null; }
+      s.overlayShown = false;
+      s.finaleStarted = false;
+    }
+    window.bdFinaleStarted = false;
+  } catch {}
 }
 
 // Finale-Observer: wenn Countdown-Zahl weg ist → Dauer-Finale
@@ -483,7 +551,7 @@ function stopBirthdaySong() {
 
 function playCountdownTick(remaining) {
   const ctx = ensureAudioCtx();
-  if (!ctx) return;
+  if (!ctx || ctx.state === 'suspended') return;
   const now = ctx.currentTime + 0.01;
   const osc = ctx.createOscillator();
   const g = ctx.createGain();
@@ -499,6 +567,51 @@ function playCountdownTick(remaining) {
   g.gain.exponentialRampToValueAtTime(0.0001, now + dur);
   osc.start(now);
   osc.stop(now + dur + 0.02);
+}
+
+function ensureSoundActivationButton() {
+  const overlay = document.getElementById('birthday-overlay');
+  if (!overlay) return;
+
+  const ctx = bdAudio.ctx; // Assumes ensureAudioCtx() was called before
+  if (!ctx || ctx.state !== 'suspended') {
+    return; // No button needed if audio is already active
+  }
+
+  if (document.getElementById('bd-sound-activate')) return;
+
+  const styleId = 'bd-sound-activate-style';
+  if (!document.getElementById(styleId)) {
+    const css = document.createElement('style');
+    css.id = styleId;
+    css.textContent = `#bd-sound-activate {
+      position:absolute; left:14px; bottom:14px; z-index:3;
+      background:rgba(15,23,42,0.6); color:#fff;
+      border:1px solid rgba(255,255,255,.2); padding:8px 12px;
+      border-radius:10px; cursor:pointer; font-weight:700;
+      backdrop-filter:blur(6px); box-shadow:0 6px 16px rgba(0,0,0,.25)
+    }`;
+    document.head.appendChild(css);
+  }
+
+  const btn = document.createElement('button');
+  btn.id = 'bd-sound-activate';
+  btn.type = 'button';
+  btn.textContent = '🔊 تفعيل الصوت';
+  overlay.appendChild(btn);
+
+  btn.onclick = async () => {
+    try {
+      if (ctx && ctx.state === 'suspended') {
+        await ctx.resume();
+        // Play a tick immediately for user feedback
+        playCountdownTick(10);
+      }
+    } catch (e) {
+      console.error('Audio resume failed', e);
+    }
+    btn.remove();
+  };
 }
 
 function ensureAudioFile() {
@@ -754,13 +867,13 @@ function startFinalSequence(finishingAge) {
     const seq = [
       `🎂 عيد ميلاد سعيد، ${LOVE_NAME}!\nصرتي ${finishingAge} سنة يا لموش 💖`,
       'لموش…',
-      'من أول مرة هضرت معاك و قلبي حسّ بحاجة مختلفة.',
-      'من 2016 و أنا نقول: ربي عطاني نعمة في شكل إنسانة.',
-      'كل عام و انتي أحلى حاجة في حياتي.',
+      'من أول مرة حكيت فيها معك اخدتي عقلي مني.',
+      ' ربي عطاني نعمة في شكل إنسانة.',
+      'كل عام و انتي أحلى شي بحياتي.',
       'ما نحبش المستقبل بلا وجودك فيه 💜',
       'الكون كامل يدوّر، و في الوسط انتي يا لموش 💜',
-      'LAMÖSCH – لموش',
-      `مع بعضنا منذ ${totalDaysForSeq.toLocaleString('ar')} يوم`,
+      ' لمووووووش',
+      `من ${totalDaysForSeq.toLocaleString('ar')} يوم`,
       'و قلبي كل يوم يحبك أكتر من اليوم اللي قبله. 💗',
       'إذا وصلتي لهنا... اضغطي على 💜 في الزاوية 3 مرات 😉'
     ];
@@ -777,7 +890,7 @@ function startFinalSequence(finishingAge) {
   }, 40000);
 }
 
-// Einfacher Zeilen-Typer (Backup)
+// Backup-Zeilen-Typer (wird aktuell nicht gebraucht, aber lassen wir)
 function typeMessageLines(lines, index) {
   const overlay = document.getElementById('birthday-overlay');
   const msgEl = overlay ? overlay.querySelector('.bd-msg') : null;
@@ -856,7 +969,7 @@ function ensureSecretHeart() {
           const secret = document.createElement('div');
           secret.style.marginTop = '12px';
           secret.style.fontSize = '1rem';
-          secret.textContent = 'هذا السر الصغير بيني و بينك يا لموش. 🥰';
+          secret.textContent = 'نحبك لاخر العمر يا لموووووشتي. 🥰';
           msgEl.appendChild(secret);
         }
       }
@@ -956,7 +1069,7 @@ function ensurePhotoSlideshow(urls, intervalMs = 18000) {
   try { window.bdPhotosTimer = timer; } catch {}
 }
 
-// Typing-Sequence
+// Typing-Sequence (mit bdSecretEnabled am Ende)
 function runTypedSequence(texts, opts = {}) {
   const overlay = document.getElementById("birthday-overlay");
   const msgEl = overlay ? overlay.querySelector(".bd-msg") : null;
@@ -996,7 +1109,7 @@ function runTypedSequence(texts, opts = {}) {
     typeOne(t, () => {
       if (isLast) {
         try { window.bdSecretEnabled = true; } catch {}
-        return;
+        return; // letzte Zeile stehen lassen
       }
       setTimeout(() => {
         fadeOut(() => {
@@ -1010,3 +1123,12 @@ function runTypedSequence(texts, opts = {}) {
   try { msgEl.innerHTML = ""; } catch {}
   next();
 }
+
+// Beim Zurückkommen aus dem Browser-Cache: alles aufräumen
+try {
+  window.addEventListener('pageshow', (e) => {
+    if (e.persisted) {
+      try { stopAllEffects(); } catch {}
+    }
+  });
+} catch {}
