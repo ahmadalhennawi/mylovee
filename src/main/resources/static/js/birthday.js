@@ -850,7 +850,7 @@ function startFinalSequence(finishingAge) {
 
   msgEl.innerHTML = `
     🎂 عيد ميلاد سعيد، ${LOVE_NAME}!
-    <span class="bd-age">صرتي ${finishingAge} سنة يا لموش 💖</span>
+    <span class="bd-age">حبي بدت بال ${finishingAge} سنة يا لموش 💖</span>
   `;
   msgEl.style.opacity = "1";
 
